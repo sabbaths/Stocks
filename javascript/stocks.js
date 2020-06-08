@@ -1,6 +1,25 @@
 $(document).ready(function () {
 
-	
+	$('.delete_stock').click(function (e) {
+		e.preventDefault();
+		var stock_id = $(this).attr('id');
+		var stock_name = $(this).attr('name');		
+
+		if (confirm('Delete Stock? ' + stock_name)) {
+			
+
+			$.ajax({  
+			    type: 'POST',  
+			    url: 'handlers/delete_stock.php', 
+			    data: { stock_id: stock_id, 
+			    },
+			    success: function(response) {
+			    	location.reload();
+			    }
+			});
+
+		}
+	});	
 
 	$('.select_stock').click(function (e) {
 		e.preventDefault();
@@ -76,18 +95,21 @@ $(document).ready(function () {
 function saveAddedStock() {
 	var stock_name = $('#input_add_stock').val()
 
-	$.ajax({  
-	    type: 'POST',  
-	    url: 'handlers/add_stock.php', 
-	    data: { stock_name: stock_name, 
-	    		stock_text: stock_name, 
-	    },
-	    success: function(response) {
-	    	if(response == 7001) {
-	    		location.reload();
-	    	}
-	    }
-	});
+	if(stock_name == '') return;
+	//if(stock_name <> '') {
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/add_stock.php', 
+		    data: { stock_name: stock_name, 
+		    		stock_text: stock_name, 
+		    },
+		    success: function(response) {
+		    	if(response == 7001) {
+		    		location.reload();
+		    	}
+		    }
+		});		
+	//}
 }
 
 
@@ -104,29 +126,31 @@ function saveStockInfo() {
 	var p10 = $('#input_10').val(); //== null ? $('#input_10').val() : 0;
 
 	//alert(shares);
-	
-	$.ajax({  
-	    type: 'POST',  
-	    url: 'handlers/add_stock_info.php', 
-	    data: { stock_id: id, 
-	    		bias: bias,
-	    		shares: shares,
-	    		entry: entry,
-	    		exit: exit,
-	    		be: be,
-	    		p1: p1,
-	    		p2: p2,
-	    		p5: p5,
-	    		p10: p10, 
-	    },
-	    success: function(response) {
-	    	if(response == 7001) {
-	    		//location.reload();
-	    	} else {
-	    		alert(response);
-	    	}
-	    }
-	});
+	if(id != '') {
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/add_stock_info.php', 
+		    data: { stock_id: id, 
+		    		bias: bias,
+		    		shares: shares,
+		    		entry: entry,
+		    		exit: exit,
+		    		be: be,
+		    		p1: p1,
+		    		p2: p2,
+		    		p5: p5,
+		    		p10: p10, 
+		    },
+		    success: function(response) {
+		    	if(response == 7001) {
+		    		//location.reload();
+		    	} else {
+		    		alert(response);
+		    	}
+		    }
+		});		
+	}
+
 }
 
 function compute() {

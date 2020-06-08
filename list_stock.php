@@ -5,7 +5,9 @@
 	foreach($stock_list as $stock) {
 	  $stock_id = $stock[0];
 	  $stock_name = $stock[1];
-	  echo "<li><a id='$stock_id' href='' class='select_stock' name='$stock_name'>$stock_name</a></li>";
+	  echo "<li><a id='$stock_id' href='' class='select_stock' name='$stock_name'>$stock_name</a>
+	  		<a id='$stock_id' href='' class='delete_stock' name='$stock_name'>Delete</a>
+	  		</li>";
 	}
 	//print_r( $database->computeStocks());
 ?>

@@ -8,6 +8,10 @@
 
 <body>
   <div class="grid-container">
+    <div class="grid-item-4">
+      <p id='header_title'>STOCKS</p>
+      
+    </div>
     <div class="grid-item-1">
       <h5><a id='add_stock' href=''>ADD STOCK</a></h5>
       <ul id='stock_list'>
@@ -26,7 +30,8 @@
 
     </div>
     <div class="grid-item-2">
-      <h1 id='header_title'>STOCKS</h1>
+      
+      <h5 id='header_thoughts'>THOUGHTS/BIAS/JOURNAL</h5>
       <textarea id='textarea_stock' onfocusout='saveStockInfo()'></textarea>
       <ul id='stock_info_ul'>
 

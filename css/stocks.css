@@ -1,16 +1,18 @@
 
 * {
-  font-family: Barlow;
+  font-family: Verdana;
 }
-a {
-  text-decoration: none;
-  color: black;
+
+.grid-item-1 > ul > li > a {
+
 }
+
 body {
   background-color: white;
 }
 
 .grid-item-1 { grid-area: menu; }
+.grid-item-4 { grid-area: header; }
 .grid-item-2 { grid-area: main; }
 .grid-item-3 { grid-area: right; }
 
@@ -24,17 +26,47 @@ body {
 
 } */
 
+.select_stock {
+  text-decoration: none;
+  color: black;
+  font-size: 12px;  
+}
+
+.delete_stock {
+  color:red;
+  font-size: 12px;  
+}
+
+#header_title {
+  color: black;
+  font-size: 50px;
+  text-align: center;
+  font-family: Aileron;
+  margin:0px;
+}
+
+#header_thoughts {
+  margin-bottom: 50px;
+
+}
+
 .grid-container {
   display: grid;
   grid-template-areas:
+    'header header header header header header'
     'menu main main main main right'
     'menu main main main main right'
     'menu main main main main right';
-  grid-gap: 10px;
+  grid-gap: 5px;
   /*background-color: #2196F3; */
-  grid-template-columns: 20% 60% 20;
+  grid-template-columns: 10% 60% 30;
  
   padding: 10px;
+}
+
+.grid-item-4 {
+  background-color: #E8E9E9;
+  border-radius: 10px;
 }
 
 .grid-item-1 {
@@ -47,7 +79,6 @@ body {
 }
 
 .grid-item-1 > ul > li{
-  padding-bottom: 5px;
 }
 
 .grid-item-2 {
@@ -57,8 +88,9 @@ body {
 }
 
 .grid-item-2 > textarea{
-  font-size: 20px;
+  font-size: 15px;
   background-color: transparent;
+  font-style: Verdana;
 }
 
 .grid-item-3 {
@@ -69,7 +101,7 @@ body {
 } 
 
 .grid-item-3 > p{
-  
+  font-size: 15px;
   margin: 0;
     
 } 
@@ -92,8 +124,9 @@ body {
 }
 
 #add_stock {
-	margin-left: 30px;
-  font-size: 30px;
+	margin-left: 20px;
+  margin-right:0px;
+  font-size: 25px;
 }
 
 #textarea_stock {

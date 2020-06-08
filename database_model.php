@@ -47,7 +47,7 @@ class Database {
 
     function getStocks() {
         $stocks_arr = array();
-        $sql = "SELECT * FROM stocks;";
+        $sql = "SELECT * FROM stocks ORDER BY name;";
         $result = self::$connection->query($sql);   
 
         if ($result->num_rows > 0) {
@@ -108,6 +108,21 @@ class Database {
         } else {   
             echo self::$connection->error;
             return 7004; //error
+        }
+    }
+
+    function deleteStock($id) {
+        $sql_delete_stock = "DELETE FROM stocks WHERE id = $id";
+        $sql_delete_stock_info = "DELETE FROM stock_info WHERE stock_id = $id";
+
+        self::$connection->query($sql_delete_stock_info);
+
+        if (self::$connection->query($sql_delete_stock) === TRUE) {
+            return 7001; //good
+        } else {   
+            echo self::$connection->error;
+            return 7002;
+            //return $sql_insert_student; //error
         }
     }
 
