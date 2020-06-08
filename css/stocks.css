@@ -4,11 +4,11 @@
 }
 
 .grid-item-1 > ul > li > a {
-
+  font-weight: bold;
 }
 
 body {
-  background-color: white;
+  background-color: silver;
 }
 
 .grid-item-1 { grid-area: menu; }
@@ -39,9 +39,9 @@ body {
 
 #header_title {
   color: black;
-  font-size: 50px;
+  font-size: 75px;
   text-align: center;
-  font-family: Aileron;
+  font-family: Simplifica;
   margin:0px;
 }
 
@@ -58,19 +58,17 @@ body {
     'menu main main main main right'
     'menu main main main main right';
   grid-gap: 5px;
-  /*background-color: #2196F3; */
-  grid-template-columns: 10% 60% 30;
- 
-  padding: 10px;
+  background-color: silver;
+  grid-template-columns: 30% 40% 30; 
 }
 
 .grid-item-4 {
-  background-color: #E8E9E9;
+  background-color: white;
   border-radius: 10px;
 }
 
 .grid-item-1 {
-  background-color: #E8E9E9;
+  background-color: white;
   border-radius: 10px;
 }
 
@@ -82,7 +80,7 @@ body {
 }
 
 .grid-item-2 {
-  background-color: #D1D3D4;
+  background-color: white;
   padding: 5%;
   border-radius: 10px;
 }
@@ -94,7 +92,7 @@ body {
 }
 
 .grid-item-3 {
-  background-color: #E8E9E9;
+  background-color: white;
   padding: 1%;
   border-radius: 20px;
   
@@ -103,6 +101,7 @@ body {
 .grid-item-3 > p{
   font-size: 15px;
   margin: 0;
+  font-weight: bold;
     
 } 
 
@@ -120,16 +119,39 @@ body {
   padding: 10px 0px;
   position: relative;
   top: 50%;
-  width: 200px;
+  width: 150px;
 }
 
 #add_stock {
 	margin-left: 20px;
   margin-right:0px;
-  font-size: 25px;
+  font-size: 15px;
+  color: black;
 }
 
 #textarea_stock {
   width: 100%;
   height: 80%;
+    border-style: none; 
+    border-color: Transparent; 
+    overflow: auto;  
+}
+
+.p_stock_info {
+
+}
+
+.span_gross {
+  color: black;
+  font-weight: bolder;
+}
+
+.span_loss {
+  font-weight: bolder;
+  color: red;
+}
+
+.span_earn {
+  font-weight: bolder;
+  color: green;
 }

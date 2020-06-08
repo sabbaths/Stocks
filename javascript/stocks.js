@@ -193,6 +193,16 @@ function computeStocks(shares, entry, exit, first_loop) {
 	var input_cl2 = $('#input_cl2');
 	var input_cl5 = $('#input_cl5');
 	var input_cl10 = $('#input_cl10');
+
+	var p_be = $('#p_be');
+	var p_1 = $('#p_1');
+	var p_2 = $('#p_2');
+	var p_5 = $('#p_5');
+	var p_10 = $('#p_10');
+	var cl_1 = $('#cl_1');
+	var cl_2 = $('#cl_2');
+	var cl_5 = $('#cl_5');
+	var cl_10 = $('#cl_10');
 	
 	if(first_loop==false) {
 	    for(var new_entry=entry+.1;new_entry<=entry*1.5;new_entry=new_entry+.1) {
@@ -205,16 +215,36 @@ function computeStocks(shares, entry, exit, first_loop) {
 	        //console.log("new percentage rounded:" + new_percentage);
 	        //console.log("new entry: " + new_entry +' gross: '+ gross + ' netsell: ' + new_net_sell + ' percentage: ' + new_percentage );
 	        if(new_percentage == .01) {
-	        	input_1.val(new_entry.toFixed(2));
+	        	var test_new_entry = new_entry.toFixed(2);
+	        	var new_gross = test_new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	p_1.html("1%");
+	        	p_1.html(p_1.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_earn'> "+ earn.toFixed(2)+" </span>");
+	        	input_1.val(test_new_entry);
 	        	//console.log( new_entry +' '+ gross + ' ' + new_net_sell + ' ' + new_percentage );
 	        } else if(new_percentage == .02) {
-	        	//console.log( new_entry +' '+ gross + ' ' + new_net_sell + ' ' + new_percentage );
-	        	input_2.val(new_entry.toFixed(2));
+	        	var test_new_entry = new_entry.toFixed(2);
+	        	var new_gross = test_new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	p_2.html("2%");
+	        	p_2.html(p_2.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_earn'> "+ earn.toFixed(2)+" </span>");
+	        	input_2.val(test_new_entry);
 	        } else if(new_percentage == .05) {
-	        	input_5.val(new_entry.toFixed(2));
+	        	var test_new_entry = new_entry.toFixed(2);
+	        	var new_gross = test_new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	p_5.html("5%");
+	        	p_5.html(p_5.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_earn'> "+ earn.toFixed(2)+" </span>");
+	        	input_5.val(test_new_entry);
 	        } else if(new_percentage == .1) {
-	        	input_10.val(new_entry.toFixed(2));
+	        	var test_new_entry = new_entry.toFixed(2);
+	        	var new_gross = test_new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	p_10.html("10%");
+	        	p_10.html(p_10.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_earn'> "+ earn.toFixed(2)+" </span>");
+	        	input_10.val(test_new_entry);
 	        } else if(new_percentage == 0) {
+	        	console.log( new_entry +' '+ gross + ' ' + new_net_sell + ' ' + new_percentage );
 	        	input_be.val(new_entry.toFixed(2));
 	        }
 	    }
@@ -230,13 +260,33 @@ function computeStocks(shares, entry, exit, first_loop) {
 	        //console.log("new entry: " + new_entry +' gross: '+ gross + ' netsell: ' + new_net_sell + ' percentage: ' + new_percentage );
 	        
 	        if(new_percentage == -.01) {
-	        	input_cl1.val(new_entry.toFixed(2));
+	        	var new_entry = new_entry.toFixed(2);
+	        	var new_gross = new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	cl_1.html("1%");
+	        	cl_1.html(cl_1.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_loss'> "+ earn.toFixed(2)+" </span>");
+	        	input_cl1.val(new_entry);
 	        } else if(new_percentage == -.02) {
-	        	input_cl2.val(new_entry.toFixed(2));
+	        	var new_entry = new_entry.toFixed(2);
+	        	var new_gross = new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	cl_2.html("2%");
+	        	cl_2.html(cl_2.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_loss'> "+ earn.toFixed(2)+" </span>");
+	        	input_cl2.val(new_entry);
 	        } else if(new_percentage == -.05) {
-	        	input_cl5.val(new_entry.toFixed(2));
+	        	var new_entry = new_entry.toFixed(2);
+	        	var new_gross = new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	cl_5.html("5%");
+	        	cl_5.html(cl_5.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_loss'> "+ earn.toFixed(2)+" </span>");
+	        	input_cl5.val(new_entry);
 	        } else if(new_percentage == -.10) {
-	        	input_cl10.val(new_entry.toFixed(2));
+	        	var new_entry = new_entry.toFixed(2);
+	        	var new_gross = new_entry * shares;
+	        	var earn = new_gross - gross;
+	        	cl_10.html("10%");
+	        	cl_10.html(cl_10.html() + "<span class='span_gross'> "+ new_gross.toFixed(2)+ " </span><span class='span_loss'> "+ earn.toFixed(2)+" </span>");
+	        	input_cl10.val(new_entry);
 	        } 
 	    }  
 	}

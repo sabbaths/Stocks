@@ -42,15 +42,15 @@
       <p>Shares</p><input id='input_shares' value=0 onfocusout='saveStockInfo()'>
       <p>Entry</p><input id='input_entry' value=0 onfocusout='compute()'>
       <p>Exit</p><input id='input_exit' value=0 onfocusout='saveStockInfo()'>
-      <p>Breakeven</p><input id='input_be' value=0 onfocusout='saveStockInfo()'>
-      <p>1%</p><input id='input_1' value=0 onfocusout='saveStockInfo()'>
-      <p>2%</p><input id='input_2' value=0 onfocusout='saveStockInfo()'>
-      <p>5%</p><input id='input_5' value=0 onfocusout='saveStockInfo()'>
-      <p>10%</p><input id='input_10' value=0 onfocusout='saveStockInfo()'>
-      <p>CUTLOSS 1%</p><input id='input_cl1' value=0 '>
-      <p>CUTLOSS 2%</p><input id='input_cl2' value=0 '>
-      <p>CUTLOSS 5%</p><input id='input_cl5' value=0 '>
-      <p>CUTLOSS 10%</p><input id='input_cl10' value=0 '>
+      <p class='p_stock_info' id='p_be'>Breakeven</p><input id='input_be' value=0 onfocusout='saveStockInfo()'>
+      <p class='p_stock_info' id='p_1'>1%</p><input id='input_1' value=0 onfocusout='saveStockInfo()'>
+      <p class='p_stock_info' id='p_2'>2%</p><input id='input_2' value=0 onfocusout='saveStockInfo()'>
+      <p class='p_stock_info' id='p_5'>5%</p><input id='input_5' value=0 onfocusout='saveStockInfo()'>
+      <p class='p_stock_info' id='p_10'>10%</p><input id='input_10' value=0 onfocusout='saveStockInfo()'>
+      <p class='p_stock_info' id='cl_1'>CUTLOSS 1%</p><input id='input_cl1' value=0 '>
+      <p class='p_stock_info' id='cl_2'>CUTLOSS 2%</p><input id='input_cl2' value=0 '>
+      <p class='p_stock_info' id='cl_5'>CUTLOSS 5%</p><input id='input_cl5' value=0 '>
+      <p class='p_stock_info' id='cl_10'>CUTLOSS 10%</p><input id='input_cl10' value=0 '>
     </div>
   </div>
 </body>
