@@ -133,7 +133,7 @@ class Database {
                 (stock_id, name, text, shares, entry, stock_exit, be, p1, p2, p5,p10) 
                 VALUES ( 
                 '".$stock_id."',
-                '"."asdfsa"."',
+                '"."none"."',
                 '".$bias."',
                 '".$shares."',
                 '".$entry."',

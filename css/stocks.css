@@ -29,12 +29,12 @@ body {
 .select_stock {
   text-decoration: none;
   color: black;
-  font-size: 12px;  
+  font-size: 15px;  
 }
 
 .delete_stock {
   color:red;
-  font-size: 12px;  
+  font-size: 9px;  
 }
 
 #header_title {
@@ -120,6 +120,7 @@ body {
   position: relative;
   top: 50%;
   width: 150px;
+  font-weight: bolder;
 }
 
 #add_stock {
