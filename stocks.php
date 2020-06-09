@@ -38,7 +38,7 @@
       </ul>
     </div>
     <div class="grid-item-3">
-      <p>Stock</p><input id='input_stock' disabled >
+      <p class='p_stock_info' id='p_stock'>Stock</p><input id='input_stock' disabled >
       <p>Shares</p><input id='input_shares' value=0 onfocusout='saveStockInfo()'>
       <p>Entry</p><input id='input_entry' value=0 onfocusout='compute()'>
       <p class='p_stock_info' id='p_exit'>Exit</p><input id='input_exit' value=0 onfocusout='computeExit()'>

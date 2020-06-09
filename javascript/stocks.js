@@ -91,6 +91,7 @@ $(document).ready(function () {
 		    	input_10.val(stock_info_array[0][11]); */
 		    	if(parseFloat(input_shares) != 0 && parseFloat(input_entry) != 0) {
 		    		compute();
+		    		computeExit()
 		    	}
 		    }
 		});
@@ -169,12 +170,14 @@ function saveStockInfo() {
 function compute() {
 	var input_shares = $('#input_shares').val();
 	var input_entry = $('#input_entry').val();
+	var p_stock = $('#p_stock');
 
 
 	if(input_shares > 0 && input_entry > 0) {
 		console.log("shares:"+input_entry+"entry:"+input_entry);
 		computeStocks(parseFloat(input_shares),parseFloat(input_entry),33.6,false);
 		saveStockInfo();
+		p_stock.html("Stocks Gross: " + (input_shares*input_entry).toFixed(2));
 	}
 }
 
@@ -260,6 +263,8 @@ function computeStocks(shares, entry, exit, first_loop) {
 	var cl_2 = $('#cl_2');
 	var cl_5 = $('#cl_5');
 	var cl_10 = $('#cl_10');
+
+
 	
 	if(first_loop==false) {
 	    for(var new_entry=entry+.1;new_entry<=entry*1.5;new_entry=new_entry+.1) {

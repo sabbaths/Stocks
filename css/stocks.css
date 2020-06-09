@@ -93,8 +93,9 @@ body {
 
 .grid-item-3 {
   background-color: white;
-  padding: 1%;
+  padding: 1px;
   border-radius: 20px;
+  width:100%;
   
 } 
 
