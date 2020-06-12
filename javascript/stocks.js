@@ -1,5 +1,81 @@
 $(document).ready(function () {
 
+	/*
+
+	var timeout = setInterval(refreshStocks, 500); 
+	function refreshStocks(){
+		console.log("test");
+	} */
+	//REFRESH EVERY SECOND WATCH LIST
+
+	//updateStockWatchList();
+
+	$('#refresh_stock_list').click( function(e) {
+	  e.preventDefault();
+	  //updateStockWatchList();
+	  checkAlertPrice();
+	});
+
+	function checkAlertPrice() {
+		console.log("CHECK ALERT PRICE");
+		$('.stock_list_item li').each(function(index, value) {
+			var li_id = value.id;
+	  		var li_stock_id = $( "li[id='"+li_id+"']" ).attr("id");
+	  		var li_stock_name = $( "li[id='"+li_id+"']" ).attr("data_name");
+
+	  		if(typeof li_stock_id !== "undefined") {
+	  			console.log("STOCK ID:" +li_stock_id +" stock name:" + li_stock_name);
+	  		}
+		});
+	}
+
+	function updateStockWatchList() {
+		$('.stock_list_item li').each(function(index, value) {
+			var t0 = performance.now()
+			var li_id = value.id;
+	  		//console.log(li_id);
+	  		var test_0 = $( "li[id='"+li_id+"']" );
+	  		var test_1 = $( "li[id='"+li_id+"']" ).attr("id");
+	  		var test_2 = $( "li[id='"+li_id+"']" ).attr("data_name");
+
+	  		
+	  		if(typeof test_1 !== "undefined") {
+	  			//console.log("test 1" + test_1);
+	  			//console.log("test 2" + test_2);
+	  			var stock_name = test_1.split('_')[3];
+	  			var what_price = 0;
+	  			
+	  			if(test_2 != 'last') {
+	  				what_price = 1;
+	  			} 
+	  			
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/test_handler.php', 
+				    data: { stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+				    	console.log("RESPONSE WEB SCRAPE " + response + "INDEX: " + index);
+				    	//header_stock_price.html(response);
+
+			  			if(test_2 == 'last') {
+			  				test_0.html(response);
+			  			} else {
+			  				test_0.html(response);
+			  			}
+						var t1 = performance.now()
+						console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      }
+				});
+	  		}
+	  		
+		});
+	}
+
 	$('.delete_stock').click(function (e) {
 		e.preventDefault();
 		var stock_id = $(this).attr('id');
@@ -25,6 +101,8 @@ $(document).ready(function () {
 		e.preventDefault();
 		
 		var stock_id = $(this).attr('id');
+		var stock_name = $(this).attr('name');
+		console.log("STOCK NAME" + stock_name);
 		var header_title = $('#header_title');
 		var input_stock = $('#input_stock');
 		var input_shares = $('#input_shares');
@@ -40,6 +118,7 @@ $(document).ready(function () {
 		var input_cl2 = $('#input_cl2');
 		var input_cl5 = $('#input_cl5');
 		var input_cl10 = $('#input_cl10');
+		var input_alert = $('#input_alert');
 
 		var p_exit = $('#p_exit').html("Exit:");
 		var p_be = $('#p_be').html("Breakeven:");
@@ -51,6 +130,7 @@ $(document).ready(function () {
 		var cl_2 = $('#cl_2').html("CL 2:");
 		var cl_5 = $('#cl_5').html("CL 5:");
 		var cl_10 = $('#cl_10').html("CL 10:");
+		var header_stock_price = $('#header_stock_price');
 
 		header_title.html($(this).attr('name'));
 		input_stock.val('');
@@ -67,8 +147,10 @@ $(document).ready(function () {
 		input_cl2.val(0);
 		input_cl5.val(0);
 		input_cl10.val(0);
+		input_alert.val(0);
 		textarea_bias.val('');
 		input_stock.val(stock_id);
+
 		$.ajax({  
 		    type: 'POST',  
 		    url: 'handlers/stock_info_handler.php', 
@@ -83,6 +165,7 @@ $(document).ready(function () {
 		    	input_shares.val(stock_info_array[0][4]);
 		    	input_entry.val(stock_info_array[0][5]);
 		    	input_exit.val(stock_info_array[0][6]);
+		    	input_alert.val(stock_info_array[0][12]);
 		    	/*input_exit.val(stock_info_array[0][6]);
 		    	input_be.val(stock_info_array[0][7]);
 		    	input_1.val(stock_info_array[0][8]);
@@ -96,14 +179,34 @@ $(document).ready(function () {
 		    }
 		});
 
+		console.log("START WEB SCRAPE");
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/web_scrape_handler.php', 
+		    data: { stock_name: stock_name, 
+		    },
+		    success: function(response) {
+		    	console.log("RESPONSE WEB SCRAPE " + response);
+		    	header_stock_price.html(response);
+		    },
+		      error: function (xhr, ajaxOptions, thrownError) {
+		      	console.log("ERROR");
+		      }
+		});
+		console.log("END WEB SCRAPE");
+
 	});
 
 	$('#add_stock').click(function (e) {
 		e.preventDefault();
-		$("#stock_list").append("<li id='li_add_stock_input'><input id='input_add_stock' value='' onfocusout='saveAddedStock()'></li>");
+		$(".grid-item-1").append("<ul class='dataListItem' id='li_add_stock_input'><input id='input_add_stock' value='' onfocusout='saveAddedStock()'></ul>");
 	});
 	
 });
+
+function refreshStockWatchlist() {
+
+}
 
 function saveAddedStock() {
 	var stock_name = $('#input_add_stock').val()
@@ -137,8 +240,8 @@ function saveStockInfo() {
 	var p2 = $('#input_2').val(); //== null ? $('#input_2').val() : 0;
 	var p5 = $('#input_5').val(); //== null ? $('#input_10').val() : 0;
 	var p10 = $('#input_10').val(); //== null ? $('#input_10').val() : 0;
+	var alert = $('#input_alert').val();
 
-	//alert(shares);
 	if(id != '') {
 		$.ajax({  
 		    type: 'POST',  
@@ -153,10 +256,10 @@ function saveStockInfo() {
 		    		p2: p2,
 		    		p5: p5,
 		    		p10: p10, 
+		    		alert: alert, 
 		    },
 		    success: function(response) {
 		    	if(response == 7001) {
-		    		//alert("SAVED");
 		    		console.log(response);
 		    	} else {
 		    		console.log(response);
@@ -167,9 +270,49 @@ function saveStockInfo() {
 
 }
 
+function saveAlertPrice() {
+	var alert_price = $('#input_alert').val();
+	var stock_id = $('#input_stock').val();
+
+	if(alert_price > 0) {
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/save_alert_price.php', 
+		    data: { stock_id: stock_id, 
+		    		alert_price: alert_price,
+		    },
+		    success: function(response) {
+		    	if(response == 7001) {
+		    		console.log(response);
+		    	} else {
+		    		console.log(response);
+		    	}
+		    }
+		});
+	}
+}
+
+function refreshAllStocks(id) {
+
+
+}
+
+function refreshStock() {
+
+}
+
+function alertPrice() {
+
+}
+
 function compute() {
 	var input_shares = $('#input_shares').val();
 	var input_entry = $('#input_entry').val();
+	var input_exit = $('#input_exit').val();
+	var input_buyshares = $('#input_buyshares');
+	var input_capital = $('#input_capital').val();
+	var input_risk_perc = $('#input_risk_perc').val();
+	var input_risk = $('#input_risk');
 	var p_stock = $('#p_stock');
 
 
@@ -186,6 +329,11 @@ function computeExit() {
 	var input_entry = $('#input_entry').val();
 	var input_exit = $('#input_exit').val();
 	var p_exit = $('#p_exit');
+	var input_buyshares = $('#input_buyshares');
+	var input_capital = $('#input_capital').val();
+	var input_risk_perc = $('#input_risk_perc').val();
+	var input_risk = $('#input_risk');
+	var p_stock = $('#p_stock');
 
 	if(input_shares > 0 && input_entry > 0 && input_exit > 0) {
 		console.log("shares:"+input_entry+"entry:"+input_entry+"exit:"+input_exit);
@@ -197,6 +345,16 @@ function computeExit() {
 		p_exit.html("Exit: ");
 		p_exit.html(p_exit.html() + " " + net);
 		saveStockInfo();
+
+		if(input_capital > 0 && input_risk_perc > 0) {
+			input_risk_perc = input_risk_perc/100;
+			var risk = input_capital * input_risk_perc;
+			var entry_exit = input_entry - input_exit;
+			input_risk.val(risk);
+			console.log("risk " + risk);
+			console.log("entry_exit " + entry_exit);
+			input_buyshares.val(risk/entry_exit);
+		}
 	}
 }
 
@@ -224,6 +382,34 @@ function computeEarning(shares,price,buy=true) {
 		return net_sell;
 	}
 }
+
+
+
+function computePosition() {
+	console.log("Compute Position");
+	var input_entry = $('#input_entry_position').val();
+	var input_exit = $('#input_exit_position').val();
+	var p_exit = $('#p_exit_position');
+	var input_buyshares = $('#input_buyshares_position');
+	var input_capital = $('#input_capital_position').val();
+	var input_risk_perc = $('#input_risk_perc_position').val();
+	var input_risk = $('#input_risk_position');
+	var p_stock = $('#p_stock_position');
+
+	if(input_entry > 0 && input_exit > 0) {
+		console.log("shares:"+input_entry+"entry:"+input_entry+"exit:"+input_exit);
+
+		if(input_capital > 0 && input_risk_perc > 0) {
+			input_risk_perc = input_risk_perc/100;
+			var risk = input_capital * input_risk_perc;
+			var entry_exit = input_entry - input_exit;
+			input_risk.val(risk);
+			console.log("risk " + risk);
+			console.log("entry_exit " + entry_exit);
+			input_buyshares.val(risk/entry_exit);
+		}
+	}
+}	
 
 function computeStocks(shares, entry, exit, first_loop) {
 	var commission_charge = .0025;

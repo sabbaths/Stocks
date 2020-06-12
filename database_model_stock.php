@@ -2,7 +2,7 @@
 
 class Database {
 
-    private static $environment = 1; //1 for dev, 2 godaddy 000webhostapp
+    private static $environment = 1; //1 for dev, 2 godaddy
     public static $connection;
     private static $servername = "";
     private static $username = "";
@@ -21,7 +21,7 @@ class Database {
                 self::$username = "sabbaths"; //apgiaa godaddy.com
                 self::$password = "Ac2am9jlqwxl)";
                 self::$database = "scheduling"; //apgiaa 
-            } else { //godaddy
+            } else { 
 
             }
         } catch(Exception $e) {
@@ -84,8 +84,9 @@ class Database {
                 $p2 = $row["p2"];
                 $p5 = $row["p5"];
                 $p10 = $row["p10"];
+                $alert_price = $row["alert"];
                 
-                $temp_array = array($stock_info_id, $stock_id, $name, $text, $shares, $entry, $exit, $be, $p1, $p2, $p5, $p10);
+                $temp_array = array($stock_info_id, $stock_id, $name, $text, $shares, $entry, $exit, $be, $p1, $p2, $p5, $p10, $alert_price);
                 array_push($stocks_arr ,$temp_array);
             }  
         }
@@ -126,11 +127,11 @@ class Database {
         }
     }
 
-    function addStockInfo($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10) {
+    function addStockInfo($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert=0) {
 
         $sql_delete_stock_info = "DELETE FROM stock_info WHERE stock_id = $stock_id";
         $sql_insert_student = "INSERT INTO stock_info 
-                (stock_id, name, text, shares, entry, stock_exit, be, p1, p2, p5,p10) 
+                (stock_id, name, text, shares, entry, stock_exit, be, p1, p2, p5,p10,alert) 
                 VALUES ( 
                 '".$stock_id."',
                 '"."none"."',
@@ -142,7 +143,8 @@ class Database {
                 '".$p1."',
                 '".$p2."',
                 '".$p5."',
-                '".$p10."')";
+                '".$p10."',
+                '".$alert."')";
 
         self::$connection->query($sql_delete_stock_info);
 
@@ -151,7 +153,6 @@ class Database {
         } else {   
             echo self::$connection->error;
             return 7002;
-            //return $sql_insert_student; //error
         }
     }
 
@@ -201,5 +202,16 @@ class Database {
         return [$entry, $net_buy, $net_sell, $percentage];
     }
 
+    function saveAlertPrice($stock_id, $alert_price) {
+        $sql_alert_price = "UPDATE stock_info SET alert = $alert_price WHERE stock_id = $stock_id";
+
+
+        if (self::$connection->query($sql_alert_price) === TRUE) {
+            return 7001; //good
+        } else {   
+            echo self::$connection->error;
+            return 7004; //error
+        }
+    }
     
 }
