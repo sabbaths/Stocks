@@ -131,7 +131,7 @@ class Database {
         }
     }
 
-    function addStockInfo($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert=0) {
+    function addStockInfo3($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert=0) {
 
         $sql_delete_stock_info = "DELETE FROM stock_info WHERE stock_id = $stock_id";
         $sql_insert_student = "INSERT INTO stock_info 
@@ -287,6 +287,57 @@ class Database {
             //return $sql_update_current_price; //error
         }
 
+    }
+
+    function addStockInfo($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert=0) {
+
+        $sql = "SELECT * FROM stock_info WHERE stock_id = $stock_id ";
+
+        $sql_insert_student = "INSERT INTO stock_info 
+                (stock_id, name, text, shares, entry, stock_exit, be, p1, p2, p5,p10,alert) 
+                VALUES ( 
+                '".$stock_id."',
+                '"."none"."',
+                '".$bias."',
+                '".$shares."',
+                '".$entry."',
+                '".$exit."',
+                '".$be."',
+                '".$p1."',
+                '".$p2."',
+                '".$p5."',
+                '".$p10."',
+                '".$alert."')";
+        $sql_update = "
+                UPDATE stock_info
+                SET name = 'none', 
+                    text = '$bias',
+                    shares = '$shares',
+                    entry = '$entry',
+                    stock_exit = '$exit',
+                    be = '$be',
+                    p1 = '$p1',
+                    p2 = '$p2',
+                    p5 = '$p5',
+                    p10 = '$p10',
+                    alert = '$alert'
+                WHERE
+                    stock_id = $stock_id ";
+
+        $result = self::$connection->query($sql);   
+        $insert = true;
+
+        if ($result->num_rows > 0) { 
+            $insert = false;
+        }
+
+        if($insert) {
+            self::$connection->query($sql_insert_student);
+            return 70011;
+        } else {
+            self::$connection->query($sql_update);
+            return 80011;
+        }
     }
     
 }

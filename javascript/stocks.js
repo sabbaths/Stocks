@@ -2,11 +2,11 @@ $(document).ready(function () {
 
 	
 	//REFRESH EVERY SECOND WATCH LIST
-	var timeout = setInterval(refreshStocks, 60000); 
+	/*var timeout = setInterval(refreshStocks, 60000); 
 	function refreshStocks(){
 		updateStockWatchList();
 		console.log("UPDATE STOCK LIST EVERY 5 Sec");
-	} 
+	} */
 	
 
 	//updateStockWatchList();
