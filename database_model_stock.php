@@ -92,7 +92,8 @@ class Database {
         }
         //print_r($courses_arr);
         
-        return $stocks_arr;       
+        return $stocks_arr; 
+        //return $sql;      
     }
 
     function addStock($id="", $name, $text="") {
@@ -105,6 +106,9 @@ class Database {
 
 
         if (self::$connection->query($sql_insert_student) === TRUE) {
+            $stock_id = self::$connection->insert_id;
+            self::addStockInfo($stock_id, 0,0,0,0,0,0,0,0,0,0);
+
             return 7001; //good
         } else {   
             echo self::$connection->error;
@@ -212,6 +216,77 @@ class Database {
             echo self::$connection->error;
             return 7004; //error
         }
+    }
+
+    function getAlertPrice($stock_id) {
+        $stocks_arr = array();
+        $sql = "SELECT alert FROM stock_info WHERE stock_id = $stock_id;";
+        $result = self::$connection->query($sql);   
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $id = $row["alert"];
+                
+                $temp_array = array($id);
+                array_push($stocks_arr ,$temp_array);
+            }  
+        } else {
+            $temp_array = array(0);
+            array_push($stocks_arr ,$temp_array);
+        }
+        //print_r($courses_arr);
+        
+        return $stocks_arr;     
+    }
+
+    function getStockCurrentChangePrice($stock_id, $stock_name, $what_price) {
+        $stocks_arr = array();
+        $sql = "SELECT current_price FROM stock_info WHERE stock_id = $stock_id;";
+
+        if($what_price != 0) {
+            $sql = "SELECT change_perc FROM stock_info WHERE stock_id = $stock_id;";
+        }
+
+
+        $result = self::$connection->query($sql);   
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $id = 0;
+                if($what_price == 0) {
+                    $id = $row["current_price"];
+                } else {
+                    $id = $row["change_perc"];
+                }
+                
+                $temp_array = array($id);
+                array_push($stocks_arr ,$temp_array);
+            }  
+        } else {
+            $temp_array = array(0);
+            array_push($stocks_arr ,$temp_array);
+        }
+        //print_r($courses_arr);
+        
+        return $stocks_arr;     
+    }
+
+    function updateStockCurrentPrice($stock_id, $price = 0, $what_price = 0) {
+
+        $sql_update_current_price = " UPDATE stock_info SET current_price = '$price' WHERE stock_id = $stock_id ";
+        
+        if($what_price != 0) {
+            $sql_update_current_price = " UPDATE stock_info SET change_perc = '$price' WHERE stock_id = $stock_id ";
+        } 
+        
+        
+        if (self::$connection->query($sql_update_current_price) === TRUE) {
+            return $sql_update_current_price; //good
+        } else {   
+            echo self::$connection->error;
+            //return $sql_update_current_price; //error
+        }
+
     }
     
 }

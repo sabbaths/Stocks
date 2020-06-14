@@ -4,6 +4,7 @@ include_once('../database_model_stock.php');
 
 $stock_id = isset($_REQUEST['stock_id']) ? $_REQUEST['stock_id'] : null;
 
+
 $database = new Database();
 $database->connectDB();
 

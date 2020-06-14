@@ -1,31 +1,103 @@
 $(document).ready(function () {
 
-	/*
-
-	var timeout = setInterval(refreshStocks, 500); 
-	function refreshStocks(){
-		console.log("test");
-	} */
+	
 	//REFRESH EVERY SECOND WATCH LIST
+	var timeout = setInterval(refreshStocks, 60000); 
+	function refreshStocks(){
+		updateStockWatchList();
+		console.log("UPDATE STOCK LIST EVERY 5 Sec");
+	} 
+	
 
 	//updateStockWatchList();
 
 	$('#refresh_stock_list').click( function(e) {
 	  e.preventDefault();
-	  //updateStockWatchList();
-	  checkAlertPrice();
+	  updateStockWatchList();
+	  //checkAlertPriceStockList();
+	  //doSomething(1);
+	  //getAlertPrice(22);
 	});
 
-	function checkAlertPrice() {
+	function checkAlertPriceStockList() {
 		console.log("CHECK ALERT PRICE");
 		$('.stock_list_item li').each(function(index, value) {
 			var li_id = value.id;
-	  		var li_stock_id = $( "li[id='"+li_id+"']" ).attr("id");
-	  		var li_stock_name = $( "li[id='"+li_id+"']" ).attr("data_name");
+	  		var li_stock_id = $( "li[id='"+li_id+"']" ).attr("data_id");
+	  		var li_stock_name = $( "li[id='"+li_id+"']" ).attr("id");
 
 	  		if(typeof li_stock_id !== "undefined") {
-	  			console.log("STOCK ID:" +li_stock_id +" stock name:" + li_stock_name);
+	  			//console.log("STOCK ID:" +li_stock_id +" stock name:" + li_stock_name);
+	  			//console.log("GET ALERT PRICE OF " + li_stock_id);
+	  			doSomething(li_stock_id);
 	  		}
+		});
+	} 
+
+	function doSomething(stock_id)
+	{
+	  doAjax(function(result){
+	  	/*
+	    if (result == true ) {
+	       console.log('success');
+	    }
+	    else {
+	       console.log('failed');
+	    } */
+	    console.log("STOCK ID " +stock_id + " ALERT PRICE " + result);
+	    //return result;
+
+
+	  }, stock_id);
+	}
+	/*
+	function doAjax()
+	{
+	  var result = false;
+	  $.ajax('handlers/get_alert_price.php', 
+		    {stock_id:0}
+		   	)
+	    .done(function(){
+	       // Do a bunch
+	       console.log("HERE");
+	       // of computation
+	       // blah blah blah
+	       result = true;
+	    }).fail(function(){
+	       result = false;
+	    });
+	  return result;
+	} */
+
+	function doAjax(callback, stock_id)
+	{
+	  $.ajax('handlers/get_alert_price.php?stock_id='+stock_id, 
+		   	)
+	    .done(function(response){
+	       // Do a bunch
+	       // of computation
+	       // blah blah blah
+	       
+	       callback(response);
+	    }).fail(function(){
+	    console.log(response);
+	       callback(false);
+	    });
+	}
+
+	function getAlertPrice(stock_id) {
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/get_alert_price.php', 
+		    data: { stock_id: stock_id, 
+		    },
+		    success: function(response) {
+		    	console.log("STOCK " +stock_id + " RESPONSE GET ALERT PRICE "+ response);
+		    	return response;
+		    },
+			error: function (xhr, ajaxOptions, thrownError) {
+				console.log("ERROR");
+			}
 		});
 	}
 
@@ -33,39 +105,69 @@ $(document).ready(function () {
 		$('.stock_list_item li').each(function(index, value) {
 			var t0 = performance.now()
 			var li_id = value.id;
-	  		//console.log(li_id);
+	  		console.log(li_id);
 	  		var test_0 = $( "li[id='"+li_id+"']" );
 	  		var test_1 = $( "li[id='"+li_id+"']" ).attr("id");
 	  		var test_2 = $( "li[id='"+li_id+"']" ).attr("data_name");
+	  		var li_stock_id = $( "li[id='"+li_id+"']" ).attr("data_id");
 
 	  		
 	  		if(typeof test_1 !== "undefined") {
-	  			//console.log("test 1" + test_1);
-	  			//console.log("test 2" + test_2);
+	  			console.log("LI ID" + test_1);
+	  			console.log("LI DATA NAME" + test_2);
+	  			console.log("LI STOCK ID " + li_stock_id);
 	  			var stock_name = test_1.split('_')[3];
 	  			var what_price = 0;
 	  			
 	  			if(test_2 != 'last') {
 	  				what_price = 1;
-	  			} 
-	  			
+	  			}
+
+	  			//GET CURRENT PRICE VIA AJAX AND FROM DATABASE
 				$.ajax({  
 				    type: 'POST',  
-				    url: 'handlers/test_handler.php', 
-				    data: { stock_name: stock_name, 
+				    url: 'handlers/get_stock_current_price.php', 
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
 				    	what_price: what_price, 
 				    },
 				    success: function(response) {
-				    	console.log("RESPONSE WEB SCRAPE " + response + "INDEX: " + index);
+			  			if(test_2 == 'last') {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				test_0.html(response);
+			  			} else {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				test_0.html(response);
+			  			}
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      }
+				});
+
+	  			//SET CURRENT PRICE, CHANGE PERC IN DATABASE	
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/update_stock_current_perc_handler.php', 
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+				    	//console.log("RESPONSE WEB SCRAPE " + response + "INDEX: " + index);
 				    	//header_stock_price.html(response);
 
 			  			if(test_2 == 'last') {
-			  				test_0.html(response);
+			  				//test_0.html(response);
+			  				//console.log("UPDATED LAST PRICE OF " + stock_name);
 			  			} else {
-			  				test_0.html(response);
+			  				//test_0.html(response);
+			  				//console.log("UPDATED LAST PERC OF " + stock_name);
 			  			}
-						var t1 = performance.now()
-						console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+						//var t1 = performance.now()
+						//console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
 				    },
 				      error: function (xhr, ajaxOptions, thrownError) {
 				      	console.log("ERROR");
@@ -157,8 +259,9 @@ $(document).ready(function () {
 		    data: { stock_id: stock_id, 
 		    },
 		    success: function(response) {
-		    	var stock_info_array = JSON.parse(response);
+		    	console.log(response);
 		    	
+		    	var stock_info_array = JSON.parse(response);
 		    	
 		    	//input_stock.val(stock_info_array[0][1]);
 		    	textarea_bias.val(stock_info_array[0][3])
@@ -175,11 +278,10 @@ $(document).ready(function () {
 		    	if(parseFloat(input_shares) != 0 && parseFloat(input_entry) != 0) {
 		    		compute();
 		    		computeExit()
-		    	}
+		    	} 
 		    }
 		});
-
-		console.log("START WEB SCRAPE");
+		
 		$.ajax({  
 		    type: 'POST',  
 		    url: 'handlers/web_scrape_handler.php', 
@@ -192,8 +294,7 @@ $(document).ready(function () {
 		      error: function (xhr, ajaxOptions, thrownError) {
 		      	console.log("ERROR");
 		      }
-		});
-		console.log("END WEB SCRAPE");
+		}); 
 
 	});
 
@@ -203,10 +304,6 @@ $(document).ready(function () {
 	});
 	
 });
-
-function refreshStockWatchlist() {
-
-}
 
 function saveAddedStock() {
 	var stock_name = $('#input_add_stock').val()
@@ -221,7 +318,11 @@ function saveAddedStock() {
 		    },
 		    success: function(response) {
 		    	if(response == 7001) {
+		    		console.log("SAVE ADDED STOCK" + response);
 		    		location.reload();
+		    	} else {
+		    		console.log("SAVE ADDED STOCK" + response);
+		    		console.log(response);
 		    	}
 		    }
 		});		

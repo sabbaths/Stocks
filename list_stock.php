@@ -21,13 +21,13 @@
 
 		echo "<ul class ='stock_list_item'>
 				<li id='' class='stock_item' name='$stock_name'>
-					<a id='$stock_id' href='' class='select_stock' data_name='$stock_name' name='$stock_name'>$stock_name</a>
+					<a id='$stock_id' href='' class='select_stock' data_name='$stock_name' data_id='$stock_id' name='$stock_name'>$stock_name</a>
 				</li>
 
-			 	<li id='stock_item_last_$stock_name' class='stock_item' data_name='last'>
+			 	<li id='stock_item_last_$stock_name' class='stock_item' data_name='last' data_id='$stock_id'>
 			 		0
 			 	</li>
-			 	<li id='stock_item_change_$stock_name' class='stock_item' data_name='change'>
+			 	<li id='stock_item_change_$stock_name' class='stock_item' data_name='change' data_id='$stock_id'>
 			 		0
 			 	</li>
 
