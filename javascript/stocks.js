@@ -2,18 +2,33 @@ $(document).ready(function () {
 
 	
 	//REFRESH EVERY SECOND WATCH LIST
-	/*var timeout = setInterval(refreshStocks, 60000); 
+	/*
+	var timeout = setInterval(refreshStocks, 60000); 
 	function refreshStocks(){
 		updateStockWatchList();
 		console.log("UPDATE STOCK LIST EVERY 5 Sec");
+
+		var today = new Date();
+		var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+		var time_updated = $('#time_updated');
+		time_updated.html("Updated: "+ time);
 	} */
 	
-
-	//updateStockWatchList();
 
 	$('#refresh_stock_list').click( function(e) {
 	  e.preventDefault();
 	  updateStockWatchList();
+	  //updateStockWatchListDatabase();
+	  //checkAlertPriceStockList();
+	  //doSomething(1);
+	  //getAlertPrice(22);
+	});
+
+	$('#refresh_stock_list_update').click( function(e) {
+	  e.preventDefault();
+	  //updateStockWatchList();
+	  updateStockWatchListDatabase();
 	  //checkAlertPriceStockList();
 	  //doSomething(1);
 	  //getAlertPrice(22);
@@ -47,7 +62,7 @@ $(document).ready(function () {
 	    console.log("STOCK ID " +stock_id + " ALERT PRICE " + result);
 	    //return result;
 
-
+	    
 	  }, stock_id);
 	}
 	/*
@@ -105,7 +120,7 @@ $(document).ready(function () {
 		$('.stock_list_item li').each(function(index, value) {
 			var t0 = performance.now()
 			var li_id = value.id;
-	  		console.log(li_id);
+	  		
 	  		var test_0 = $( "li[id='"+li_id+"']" );
 	  		var test_1 = $( "li[id='"+li_id+"']" ).attr("id");
 	  		var test_2 = $( "li[id='"+li_id+"']" ).attr("data_name");
@@ -113,12 +128,9 @@ $(document).ready(function () {
 
 	  		
 	  		if(typeof test_1 !== "undefined") {
-	  			console.log("LI ID" + test_1);
-	  			console.log("LI DATA NAME" + test_2);
-	  			console.log("LI STOCK ID " + li_stock_id);
 	  			var stock_name = test_1.split('_')[3];
 	  			var what_price = 0;
-	  			
+	  			test_0.html("0");	
 	  			if(test_2 != 'last') {
 	  				what_price = 1;
 	  			}
@@ -127,6 +139,7 @@ $(document).ready(function () {
 				$.ajax({  
 				    type: 'POST',  
 				    url: 'handlers/get_stock_current_price.php', 
+
 				    data: { 
 						stock_id: li_stock_id, 
 				    	stock_name: stock_name, 
@@ -135,18 +148,29 @@ $(document).ready(function () {
 				    success: function(response) {
 			  			if(test_2 == 'last') {
 			  				//console.log("GET LAST PRICE OF " + stock_name);
-			  				test_0.html(response);
+			  				if (response != null || undefined) {
+			  					test_0.html(response);
+			  				} else {
+			  					test_0.html(0);	
+			  				}
 			  			} else {
 			  				//console.log("GET LAST PRICE OF " + stock_name);
-			  				test_0.html(response);
+			  				if (response != null || undefined) {
+			  					test_0.html(response);	
+			  				} else {
+			  					test_0.html(0);	
+			  				}
+			  				
 			  			}
 				    },
 				      error: function (xhr, ajaxOptions, thrownError) {
 				      	console.log("ERROR");
+				      	test_0.html(0);
 				      }
 				});
 
 	  			//SET CURRENT PRICE, CHANGE PERC IN DATABASE	
+				/*
 				$.ajax({  
 				    type: 'POST',  
 				    url: 'handlers/update_stock_current_perc_handler.php', 
@@ -172,10 +196,104 @@ $(document).ready(function () {
 				      error: function (xhr, ajaxOptions, thrownError) {
 				      	console.log("ERROR");
 				      }
-				});
+				}); */
 	  		}
 	  		
 		});
+	}
+
+	function updateStockWatchListDatabase() {
+		console.log("UPDATE PROCESSING PRICE, PERC of DATABASE");
+
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/update_stock_current_perc_handler.php', 
+		    data: { 
+				stock_id: 0, 
+		    	stock_name: 0, 
+		    	what_price: 0, 
+		    },
+		    success: function(response) {
+				console.log("UPDATED PRICE, PERC of DATABASE");
+		    },
+		      error: function (xhr, ajaxOptions, thrownError) {
+		      	console.log("ERROR");
+		      }
+		});
+
+		/*
+		$('.stock_list_item li').each(function(index, value) {
+			var t0 = performance.now()
+			var li_id = value.id;
+	  		
+	  		var test_0 = $( "li[id='"+li_id+"']" );
+	  		var test_1 = $( "li[id='"+li_id+"']" ).attr("id");
+	  		var test_2 = $( "li[id='"+li_id+"']" ).attr("data_name");
+	  		var li_stock_id = $( "li[id='"+li_id+"']" ).attr("data_id");
+
+	  		
+	  		if(typeof test_1 !== "undefined") {
+	  			var stock_name = test_1.split('_')[3];
+	  			var what_price = 0;
+	  			
+	  			if(test_2 != 'last') {
+	  				what_price = 1;
+	  			}
+
+	  			//GET CURRENT PRICE VIA AJAX AND FROM DATABASE
+				/*
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/get_stock_current_price.php', 
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+			  			if(test_2 == 'last') {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				test_0.html(response);
+			  			} else {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				test_0.html(response);
+			  			}
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      }
+				}); 
+
+	  			//SET CURRENT PRICE, CHANGE PERC IN DATABASE	
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/update_stock_current_perc_handler.php', 
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+				    	//console.log("RESPONSE WEB SCRAPE " + response + "INDEX: " + index);
+				    	//header_stock_price.html(response);
+
+			  			if(test_2 == 'last') {
+			  				//test_0.html(response);
+			  				console.log("UPDATED LAST PRICE OF " + stock_name);
+			  			} else {
+			  				//test_0.html(response);
+			  				console.log("UPDATED LAST PERC OF " + stock_name);
+			  			}
+						//var t1 = performance.now()
+						//console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      }
+				});
+	  		}
+	  		
+		}); */
 	}
 
 	$('.delete_stock').click(function (e) {
@@ -263,7 +381,6 @@ $(document).ready(function () {
 		    	
 		    	var stock_info_array = JSON.parse(response);
 		    	
-		    	//input_stock.val(stock_info_array[0][1]);
 		    	textarea_bias.val(stock_info_array[0][3])
 		    	input_shares.val(stock_info_array[0][4]);
 		    	input_entry.val(stock_info_array[0][5]);

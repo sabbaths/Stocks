@@ -37,6 +37,7 @@
 
 			 	</ul>";
 	}
-	echo "<ul class ='stock_list_item'><li><a id='refresh_stock_list' href=''>REFRESH</a></li></ul>"
+	echo "<ul class ='stock_list_item'><li><a id='refresh_stock_list' href=''>REFRESH</a></li></ul>";
+	echo "<ul class ='stock_list_item'><li><a id='refresh_stock_list_update' href=''>REFRESH DB</a></li></ul>";
 	//print_r( $database->computeStocks());
 ?>

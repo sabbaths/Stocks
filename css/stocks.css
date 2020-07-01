@@ -7,6 +7,12 @@
   font-weight: bold;
 }
 
+#time_updated {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: blue;
+}
+
 .stock_list_item {
   float: left;
   list-style-type: none;

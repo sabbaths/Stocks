@@ -2,8 +2,8 @@
 
 echo "LOADING";
 
-include_once('../web_scraper.php');
-include_once('../database_model_stock.php');
+include_once('web_scraper.php');
+include_once('database_model_stock.php');
 /*
 $stock_id = isset($_REQUEST['stock_id']) ? $_REQUEST['stock_id'] : null;
 $stock_name = isset($_REQUEST['stock_name']) ? $_REQUEST['stock_name'] : null;
@@ -26,13 +26,13 @@ for($counter=0;$counter<=count($stock_list_arr)-1;$counter++) {
 
 	
 	//if($price >= 0)
-		$database->updateStockCurrentPrice($stock_id, $price, $what_price);
+	$database->updateStockCurrentPrice($stock_id, $price, $what_price);
 
 	//$web_scrape_perc = new NWebScraper($what_price_perc);
 	$price_perc = $web_scrape->getStockChangePerc($stock_name);
 
 	//if($price_perc >= 0)
-		$database->updateStockCurrentPrice($stock_id, $price_perc, $what_price_perc); 
+	$database->updateStockCurrentPrice($stock_id, $price_perc, $what_price_perc); 
 
 }
 

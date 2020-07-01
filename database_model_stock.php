@@ -273,6 +273,7 @@ class Database {
 
     function updateStockCurrentPrice($stock_id, $price = 0, $what_price = 0) {
 
+
         $sql_update_current_price = " UPDATE stock_info SET current_price = '$price' WHERE stock_id = $stock_id ";
         
         if($what_price != 0) {
@@ -339,5 +340,7 @@ class Database {
             return 80011;
         }
     }
+
+    
     
 }

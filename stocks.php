@@ -10,6 +10,7 @@
 
     <div class="grid-item-1">
       <h5><a id='add_stock' href=''>ADD STOCK</a></h5>
+      <span id='time_updated'>Last Updated:</span>
       
       <!-- <ul id='stock_list'> -->
         <?php

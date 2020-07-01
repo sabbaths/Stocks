@@ -3,7 +3,7 @@
 class NWebScraper {
 	//google api key AIzaSyBTpjkG2KgVlqsKi7Kwnp8EqaiGv77t9cw
 	function getStock($stock) {
-		require('simple_html_dom.php');
+		include_once('simple_html_dom.php');
 		
 		$html = file_get_html('https://www.investagrams.com/Stock/PSE:'.$stock);
 		/*
@@ -31,7 +31,7 @@ class NWebScraper {
 	}
 
 	function getStockTest($stock) {
-		require('simple_html_dom.php');
+		require_once('simple_html_dom.php');
 		$stock_info_arr = array();
 		$a = 0;
 		$b = 0;
@@ -58,7 +58,7 @@ class NWebScraper {
 	}
 
 	function getStockLast($stock) {
-		require('simple_html_dom.php');
+		require_once('simple_html_dom.php');
 		$stock_info_arr = array();
 		$a = 0;
 
@@ -75,7 +75,7 @@ class NWebScraper {
 	}
 
 	function getStockChangePerc($stock) {
-		require('simple_html_dom.php');
+		require_once('simple_html_dom.php');
 		$stock_info_arr = array();
 		$c = 0;
 
@@ -95,10 +95,10 @@ class NWebScraper {
 
 <?php
 
-class WebScraper {
+class NWebScraperPeso {
 	//google api key AIzaSyBTpjkG2KgVlqsKi7Kwnp8EqaiGv77t9cw
 	function getStock($stock) {
-		require('simple_html_dom.php');
+		require_once('simple_html_dom.php');
 		$html = file_get_html('https://www.pesobility.com/stock/'.$stock);
 
 		foreach($html->find('div[class=large-3 columns]') as $element) {
@@ -108,6 +108,40 @@ class WebScraper {
 		}
 		echo "NONE";
 	}
+
+	function getStockLast($stock) {
+		require_once('simple_html_dom.php');
+		$stock_info_arr = array();
+		$a = 0;
+
+		$html = file_get_html('https://www.pesobility.com/stock/'.$stock);
+		/*
+		foreach($html->find('div[class=d-inline-flex]') as $element) {
+			$a = $element->find('span#lblStockLatestLastPrice',0);
+			break;
+		} */
+		$a = $html->find('div[class=large-3 columns]')[1];
+
+		return $a;
+		//return 4;
+	}
+
+	function getStockChangePerc($stock) {
+		require_once('simple_html_dom.php');
+		$stock_info_arr = array();
+		$c = 0;
+
+		$html = file_get_html('https://www.pesobility.com/stock/'.$stock);
+		/*
+		foreach($html->find('div[class=d-inline-flex]') as $element) {
+			$c = $element->find('span#lblStockLatestChangePerc',0);
+			break;
+		} */
+		$c = $html->find('div[class=large-3 columns]')[3];
+		//return 5;
+		return $c;
+	}
+
 }
 
 ?>
