@@ -1,5 +1,121 @@
 $(document).ready(function () {
+	var page_id_global = 1;
 
+	$('#login_modal').css("display","block");
+
+	$( "#textarea_stock").keyup(function(event) {
+		var currentdate = new Date(); 
+		var datetime = "Last Log: " + currentdate.getDate() + "/"
+		                + (currentdate.getMonth()+1)  + "/" 
+		                + currentdate.getFullYear() + " @ "  
+		                + currentdate.getHours() + ":"  
+		                + currentdate.getMinutes() + ":" 
+		                + currentdate.getSeconds();
+
+  		var key_pressed = event.keyCode;
+  		var textarea_value = $(this).val();
+
+
+  		console.log("key pressed " + key_pressed);
+
+  		if(key_pressed == 191) {
+  			console.log("add test");
+  			$(this).val(textarea_value + datetime);
+  		}
+	});
+
+
+	$('#btn_login').click(function (e) {
+		//check database username and password
+		var username = $('#input_login_un').val();
+		var password = $('#input_login_pw').val();
+
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/login_handler.php', 
+		    data: { username: username, 
+		    		password: password,
+		    },
+		    success: function(response) {
+		    	console.log(response);
+		    	var response_json = JSON.parse(response);	    	
+		    	var status_code = response_json[0]; 
+		    	var user_id = response_json[1];
+
+		    	if(status_code == '1001' && user_id != '0') {
+					$.ajax({  
+					    type: 'POST',  
+					    url: 'stocks.php', 
+					    data: { username: username, 
+					    },
+					    success: function(response) {
+					    },
+						error: function (xhr, ajaxOptions, thrownError) {
+							console.log("SESSION ERROR");
+						}
+					});
+
+		    		//login_modal.css("display","none");
+		    		post('stocks.php', {username: 'username'});
+
+
+		    	} else if(status_code == '1001' && user_id == '0') {
+		    		alert("Invalid Username OR Password")
+		    	} else {
+		    		alert("Server Error")
+		    	}
+		    }
+		});
+
+		
+	});	
+
+	function post(path, params, method='post') {
+
+	  // The rest of this code assumes you are not using a library.
+	  // It can be made less wordy if you use one.
+	  const form = document.createElement('form');
+	  form.method = method;
+	  form.action = path;
+
+	  for (const key in params) {
+	    if (params.hasOwnProperty(key)) {
+	      const hiddenField = document.createElement('input');
+	      hiddenField.type = 'hidden';
+	      hiddenField.name = key;
+	      hiddenField.value = params[key];
+
+	      form.appendChild(hiddenField);
+	    }
+	  }
+
+	  document.body.appendChild(form);
+	  form.submit();
+	}
+
+	$('.stock_list_item_page').click( function(e) {
+	  var page_id = $(this).text();
+	  var input_hidden = $('#input_hidden').val(page_id);
+	  console.log("page " + page_id);
+	  console.log("page hidden " + input_hidden.val());
+	  page_id_global = page_id;
+	  
+	  //call handler get stock by user and page
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/stock_list_item_page_handler.php', 
+		    data: { 
+	    		user_id: 1,
+	    		page_id: page_id,
+		    },
+		    success: function(response) {
+		    	refreshStockListItem(response);
+		    },
+			error: function (xhr, ajaxOptions, thrownError) {
+				console.log("ERROR");
+			}
+		});
+	});	
 	
 	//REFRESH EVERY SECOND WATCH LIST
 	/*
@@ -14,6 +130,52 @@ $(document).ready(function () {
 		var time_updated = $('#time_updated');
 		time_updated.html("Updated: "+ time);
 	} */
+
+	function refreshStockListItem(stock_list) {
+		var stock_list = JSON.parse(stock_list);
+		var pagination = $('.pagination');
+		var stock_list_item_ul = $('.stock_list_item').empty();
+
+		if(stock_list.length == 0) return;
+
+
+
+		for(var i = 0;i<=stock_list.length-1;i++) {
+			var stock_id = stock_list[i][0];
+			var stock_name = stock_list[i][1];
+
+			var ul_item = "<ul class ='stock_list_item'> \
+							<li id='' class='stock_item' name='"+stock_name+"'> \
+								<a id='"+stock_id+"' href='' class='select_stock' data_name='"+stock_name+"' data_id='"+stock_id+"' name='"+stock_name+"'>"+stock_name+"</a> \
+							</li> \
+						 	<li id='stock_item_last_"+stock_name+"' class='stock_item' data_name='last' data_id='"+stock_id+"'> \
+						 		0 \
+						 	</li> \
+						 	<li id='stock_item_change_"+stock_name+"' class='stock_item' data_name='change' data_id='"+stock_id+"'> \
+						 		0 \
+						 	</li> \
+							<li id='' class='stock_item'> \
+								<a id='"+stock_id+"' href='' class='delete_stock' name='"+stock_name+"'>DEL</a> \
+						 	</li> \
+		 			  </ul>";
+		 			  
+			pagination.after(ul_item);
+		}
+
+		var ul_item_first = "<ul class ='stock_list_item'> \
+						  		<li class='stock_item'> \
+						  			CODE \
+						  		</li> \
+						  	 	<li class='stock_item'> \
+						  	 		LAST \
+						  	 	</li> \
+						  	 	<li class='stock_item'> \
+						  	 		CHNG \
+						  	 	</li> \
+			 				</ul>";
+
+		pagination.after(ul_item_first);
+	}
 	
 
 	$('#refresh_stock_list').click( function(e) {
@@ -316,8 +478,9 @@ $(document).ready(function () {
 
 		}
 	});	
-
+	/*
 	$('.select_stock').click(function (e) {
+		console.log("select stock");
 		e.preventDefault();
 		
 		var stock_id = $(this).attr('id');
@@ -386,12 +549,7 @@ $(document).ready(function () {
 		    	input_entry.val(stock_info_array[0][5]);
 		    	input_exit.val(stock_info_array[0][6]);
 		    	input_alert.val(stock_info_array[0][12]);
-		    	/*input_exit.val(stock_info_array[0][6]);
-		    	input_be.val(stock_info_array[0][7]);
-		    	input_1.val(stock_info_array[0][8]);
-		    	input_2.val(stock_info_array[0][9]);
-		    	input_5.val(stock_info_array[0][10]);
-		    	input_10.val(stock_info_array[0][11]); */
+
 		    	if(parseFloat(input_shares) != 0 && parseFloat(input_entry) != 0) {
 		    		compute();
 		    		computeExit()
@@ -413,17 +571,122 @@ $(document).ready(function () {
 		      }
 		}); 
 
-	});
+	}); */
+
+
 
 	$('#add_stock').click(function (e) {
 		e.preventDefault();
-		$(".grid-item-1").append("<ul class='dataListItem' id='li_add_stock_input'><input id='input_add_stock' value='' onfocusout='saveAddedStock()'></ul>");
+		$("#refresh_stock_list").before("<li class='dataListItem' id='li_add_stock_input'><input id='input_add_stock' value='' size='6'><a id='a_add_stock_done' href='' onclick='saveAddedStock()'>DONE</a></li>");
 	});
+
 	
 });
 
+$(document).on("click",".select_stock",function(e){
+		console.log("select stock");
+		e.preventDefault();
+
+		$(".select_stock").css("font-weight", "normal");
+		$(this).css("font-weight", "bold");
+		
+		var stock_id = $(this).attr('id');
+		var stock_name = $(this).attr('name');
+		console.log("STOCK NAME" + stock_name);
+		var header_title = $('#header_title');
+		var input_stock = $('#input_stock');
+		var input_shares = $('#input_shares');
+		var input_entry = $('#input_entry');
+		var input_exit = $('#input_exit');
+		var input_be = $('#input_be');
+		var input_1 = $('#input_1');
+		var input_2 = $('#input_2');
+		var input_5 = $('#input_5');
+		var input_10 = $('#input_10');
+		var textarea_bias =  $('#textarea_stock');
+		var input_cl1 = $('#input_cl1');
+		var input_cl2 = $('#input_cl2');
+		var input_cl5 = $('#input_cl5');
+		var input_cl10 = $('#input_cl10');
+		var input_alert = $('#input_alert');
+
+		var p_exit = $('#p_exit').html("Exit:");
+		var p_be = $('#p_be').html("Breakeven:");
+		var p_1 = $('#p_1').html("1:");
+		var p_2 = $('#p_2').html("2:");
+		var p_5 = $('#p_5').html("5:");
+		var p_10 = $('#p_10').html("10:");
+		var cl_1 = $('#cl_1').html("CL 1:");
+		var cl_2 = $('#cl_2').html("CL 2:");
+		var cl_5 = $('#cl_5').html("CL 5:");
+		var cl_10 = $('#cl_10').html("CL 10:");
+		var header_stock_price = $('#header_stock_price');
+		var header_stock_name = $('#header_stock_name');
+
+		header_stock_name.html("STOCK: " + $(this).attr('name'));
+		header_title.html($(this).attr('name'));
+		input_stock.val('');
+		input_shares.val('');
+		input_shares.val(0);
+		input_entry.val(0);
+		input_exit.val(0);
+		input_be.val(0);
+		input_1.val(0);
+		input_2.val(0);
+		input_5.val(0);
+		input_10.val(0);
+		input_cl1.val(0);
+		input_cl2.val(0);
+		input_cl5.val(0);
+		input_cl10.val(0);
+		input_alert.val(0);
+		textarea_bias.val('');
+		input_stock.val(stock_id);
+
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/stock_info_handler.php', 
+		    data: { stock_id: stock_id, 
+		    },
+		    success: function(response) {
+		    	console.log(response);
+		    	
+		    	var stock_info_array = JSON.parse(response);
+		    	
+		    	textarea_bias.val(stock_info_array[0][3])
+		    	input_shares.val(stock_info_array[0][4]);
+		    	input_entry.val(stock_info_array[0][5]);
+		    	input_exit.val(stock_info_array[0][6]);
+		    	input_alert.val(stock_info_array[0][12]);
+
+		    	if(parseFloat(input_shares) != 0 && parseFloat(input_entry) != 0) {
+		    		compute();
+		    		computeExit()
+		    	} 
+		    }
+		});
+		
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/web_scrape_handler.php', 
+		    data: { stock_name: stock_name, 
+		    },
+		    success: function(response) {
+		    	console.log("RESPONSE WEB SCRAPE " + response);
+		    	header_stock_price.html(response);
+		    },
+		      error: function (xhr, ajaxOptions, thrownError) {
+		      	console.log("ERROR");
+		      }
+		}); 
+});
+
 function saveAddedStock() {
-	var stock_name = $('#input_add_stock').val()
+	var page_id = $('#input_hidden').val();
+	var user_id = 1;
+	var stock_name = $('#input_add_stock').val();
+
+	if(!page_id) page_id = 1;
 
 	if(stock_name == '') return;
 	//if(stock_name <> '') {
@@ -431,7 +694,9 @@ function saveAddedStock() {
 		    type: 'POST',  
 		    url: 'handlers/add_stock.php', 
 		    data: { stock_name: stock_name, 
-		    		stock_text: stock_name, 
+		    		stock_text: stock_name,
+		    		page_id: page_id,
+		    		user_id: user_id,
 		    },
 		    success: function(response) {
 		    	if(response == 7001) {
@@ -445,7 +710,6 @@ function saveAddedStock() {
 		});		
 	//}
 }
-
 
 function saveStockInfo() {
 	var id = $('#input_stock').val();
@@ -600,8 +864,6 @@ function computeEarning(shares,price,buy=true) {
 		return net_sell;
 	}
 }
-
-
 
 function computePosition() {
 	console.log("Compute Position");
@@ -759,5 +1021,78 @@ function computeStocks(shares, entry, exit, first_loop) {
 
 	return [entry, net_buy, net_sell, percentage];
 }
+
+function logout() {
+	$.ajax({  
+	    type: 'POST',  
+	    url: 'handlers/logout_handler.php', 
+	    success: function(response) {
+	    },
+	  	error: function(response) {
+	  		alert('logout error');	
+	    },
+	});
+}
+
+function testFetch() {
+	fetch('https://api.github.com/repos/javascript-tutorial/en.javascript.info/commits')
+	  .then(response => response.json())
+	  .then(commits => alert(commits[0].author.login));
+}
+
+function loginModal(e) {
+	var login_modal = $('#login_modal');
+	var username = $('#login_modal_username').val();
+	var password = $('#login_modal_password').val();
+
+	console.log(username);
+	console.log(password);
+
+	$.ajax({  
+	    type: 'POST',  
+	    url: 'handlers/login_handler.php', 
+	    data: { username: username, 
+	    		password: password,
+	    },
+	    success: function(response) {
+	    	console.log(response);
+	    	var response_json = JSON.parse(response);	    	
+	    	var status_code = response_json[0]; 
+	    	var user_id = response_json[1];
+
+	    	if(status_code == '1001' && user_id != '0') {
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'stocks.php', 
+				    data: { username: username, 
+				    },
+				    success: function(response) {
+				    },
+					error: function (xhr, ajaxOptions, thrownError) {
+						console.log("SESSION ERROR");
+					}
+				});
+
+	    		login_modal.css("display","none");
+
+
+
+	    	} else if(status_code == '1001' && user_id == '0') {
+	    		alert("Invalid Username OR Password")
+	    	} else {
+	    		alert("Server Error")
+	    	}
+	    }
+	});
+
+
+
+}
+
+testFetch();
+
+
+
+
 
 

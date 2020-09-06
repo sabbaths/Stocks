@@ -9,20 +9,24 @@ class Database {
     private static $password = "";
     private static $database = "";
 
-    function setEnvironment($environment = 2) {
+    function setEnvironment() {
         try {
             if(self::$environment == 1) { //dev
                 static::$servername = "localhost";
                 static::$username = "root"; //apgiaa godaddy.com
                 self::$password = "root";
                 self::$database = "localhost"; //apgiaa godaddy.com
-            } else if ($environment == 2) { //godaddy
+            } else if (self::$environment == 2) { //godaddy
                 self::$servername = "localhost";
                 self::$username = "sabbaths"; //apgiaa godaddy.com
                 self::$password = "Ac2am9jlqwxl)";
                 self::$database = "scheduling"; //apgiaa 
-            } else { 
-
+            } else if (self::$environment == 3) { //epizy
+                self::$servername = "http://185.27.134.10/";
+                self::$username = "epiz_26302129"; //apgiaa godaddy.com
+                self::$password = "MxWzDm0K2TM";
+                //self::$password = "ac2am9jlqwxl0";
+                self::$database = "epiz_26302129_stocks"; //apgiaa 
             }
         } catch(Exception $e) {
 
@@ -45,9 +49,38 @@ class Database {
         return $status_code;
     }
 
-    function getStocks() {
+    function login($username, $password) {
+        $status_code = 1002;
+        $user_id = 0;
+        $return_array = [];
+
+        $sql = "SELECT user_id FROM users WHERE username = ? AND password = ? ";
+
+        try {
+            $stmt = self::$connection->prepare($sql);
+            $stmt->bind_param('ss', $username, $password);
+            $stmt->execute();
+            $stmt -> store_result();
+            $stmt -> bind_result($user_id);
+            $stmt -> fetch();
+            $status_code = 1001;
+        } catch (Exception $exc) {
+            $status_code = 1003;
+        }
+
+        $return_array = [$status_code, $user_id];
+        return $return_array;
+    }
+
+    function getStocks($user_id = 1, $page_id = 1) {
         $stocks_arr = array();
-        $sql = "SELECT * FROM stocks ORDER BY name;";
+        $sql = "SELECT * 
+            FROM stocks 
+            WHERE user_id = $user_id
+                AND page_id = $page_id
+                AND is_active = 1
+            ORDER BY name;";
+
         $result = self::$connection->query($sql);   
 
         if ($result->num_rows > 0) {
@@ -96,12 +129,14 @@ class Database {
         //return $sql;      
     }
 
-    function addStock($id="", $name, $text="") {
+    function addStock($id=1, $name, $text="", $page_id) {
         $sql_insert_student = "INSERT INTO stocks 
-                (name, text) 
+                (name, text, user_id, page_id) 
                 VALUES ( 
-                '".$name."',
-                '".$text."')";
+                '".strtoupper($name)."',
+                '".strtoupper($text)."',
+                '".$id."',
+                '".$page_id."')";
 
 
 
@@ -117,9 +152,13 @@ class Database {
     }
 
     function deleteStock($id) {
+        $sql_update_stocks = "UPDATE  stocks SET is_active = 0 WHERE id = $id";
         $sql_delete_stock = "DELETE FROM stocks WHERE id = $id";
         $sql_delete_stock_info = "DELETE FROM stock_info WHERE stock_id = $id";
+        self::$connection->query($sql_update_stocks);
 
+        //OLD CODE delete stocks/stock info
+        /*
         self::$connection->query($sql_delete_stock_info);
 
         if (self::$connection->query($sql_delete_stock) === TRUE) {
@@ -128,7 +167,9 @@ class Database {
             echo self::$connection->error;
             return 7002;
             //return $sql_insert_student; //error
-        }
+        } */
+
+        return 7001;
     }
 
     function addStockInfo3($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert=0) {

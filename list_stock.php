@@ -3,6 +3,18 @@
 	$database->connectDB();
 	$stock_list = $database->getStocks();
 
+	echo "
+
+		<div class='pagination'>
+		  <a class ='stock_list_item_page' href='#'>1</a>
+		  <a class ='stock_list_item_page' href='#'>2</a>
+		  <a class ='stock_list_item_page' href='#'>3</a>
+		  <a class ='stock_list_item_page' href='#'>4</a>
+		  <a class ='stock_list_item_page' href='#'>5</a>
+		</div>	
+		<input id='input_hidden' type='hidden'>
+	";
+
 	echo "<ul class ='stock_list_item'>
 	  		<li class='stock_item'>
 	  			CODE
@@ -13,7 +25,7 @@
 	  	 	<li class='stock_item'>
 	  	 		CHNG
 	  	 	</li>
-		 	</ul>";
+	 	</ul>";
 
 	foreach($stock_list as $stock) {
 		$stock_id = $stock[0];
@@ -35,9 +47,10 @@
 					<a id='$stock_id' href='' class='delete_stock' name='$stock_name'>DEL</a>
 			 	</li>
 
-			 	</ul>";
+		 	</ul>";
 	}
-	echo "<ul class ='stock_list_item'><li><a id='refresh_stock_list' href=''>REFRESH</a></li></ul>";
-	echo "<ul class ='stock_list_item'><li><a id='refresh_stock_list_update' href=''>REFRESH DB</a></li></ul>";
+	echo "</br><h7><a id='refresh_stock_list' href=''>REFRESH</a></h7></br>";
+	echo "<h7><a id='refresh_stock_list_update' href=''>REFRESH DB</a></h7></br>";
+	echo "<h7><span id='time_updated'>Last Updated:</span></h7>";
 	//print_r( $database->computeStocks());
 ?>

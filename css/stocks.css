@@ -1,9 +1,46 @@
+#p_logout {
+  position: fixed;
+  bottom: 25px;
+  right: 15px;
+}
+
+#header_stock_name::first-line {
+  font-weight: bold;
+}
+
+#a_add_stock_done {
+  color: red;
+  font-size: 12px;
+  margin-left: 15px;
+}
+
+#a_logout {
+  color: blue;
+  text-decoration: none;
+}
 
 * {
   font-family: Verdana;
+  box-sizing: border-box;
 }
 
-.grid-item-1 > ul > li > a {
+#w3-modal {
+  display:  block;
+}
+
+
+
+.grid-item-1 {
+  border: 1px solid #000;
+  height: 100vh;
+}
+
+.grid-item-2,.grid-item-3, .grid-item-5 {
+  border: none;
+}
+
+
+.grid-item-1 > ul > li:last-child > a {
   font-weight: bold;
 }
 
@@ -20,6 +57,12 @@
   margin: 0;
 }
 
+.stock_list_item:first-of-type {
+  font-weight: bold;
+  margin-left: 10px;
+  margin-bottom: 15px;
+} 
+
 .stock_item {
   float:left;
   list-style-type: none;
@@ -32,26 +75,14 @@
   font-size: 12px;
 }
 
-body {
-  background-color: silver;
-}
-/*
-.grid-item-1 { grid-area: menu; }
-.grid-item-4 { grid-area: header; }
-.grid-item-2 { grid-area: main; }
-.grid-item-3 { grid-area: right; }
-.grid-item-5 { grid-area: feet; }
-*/
 
 .grid-container {
-	
-	display: grid;
-	grid-template-columns: 15% 45% 20% 20%;
-	grid-template-rows: 100%;
-	grid-gap: 5px;
-  width: 100vw;
-  height: 100vh;
-}
+  display: inline-grid;
+  grid-template-columns: 15% 65% 10% 10%;
+  grid-template-rows: 100%;
+  height: 120%;
+  background-color: white;
+}   
 
 .select_stock {
   text-decoration: none;
@@ -76,27 +107,9 @@ body {
   margin-bottom: 50px;
 
 }
-/*
-.grid-container {
-  display: grid;
-  grid-template-areas:
-    'header header header header header header'
-    'menu main main right feet feet'
-    'menu main main right feet feet'
-    'menu main main right feet feet';
-  grid-gap: 5px;
-  background-color: silver;
-  
-} */
-/*
-.grid-item-4 {
-  background-color: white;
-  border-radius: 10px;
-} */
 
 .grid-item-1 {
   background-color: white;
-  border-radius: 10px;
 }
 
 .grid-item-1 > ul{
@@ -109,31 +122,23 @@ body {
 .grid-item-2 {
   background-color: white;
   padding: 5%;
-  border-radius: 10px;
 }
 
-.grid-item-2 > textarea{
-  font-size: 15px;
-  background-color: transparent;
-  font-style: Verdana;
-}
 
 .grid-item-3 {
   background-color: white;
   padding: 1px;
-  border-radius: 20px;  
 } 
 
 .grid-item-5 {
   background-color: white;
-  border-radius: 5px;
 } 
 
 .grid-item-3 > p{
   font-size: 10px;
+  height: 8px;
   margin: 0;
   font-weight: bold;
-    
 } 
 
 .grid-item-3 > input { /*
@@ -153,33 +158,38 @@ body {
   width: 100px;
   font-weight: bolder;
 */
-  font-size: 10px;
-  position: relative;
+  font-size: 8px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .grid-item-5 > p {
   font-size: 10px;
-  margin: 0;
+  margin: 1px;
+  height: 8px;
+  font-weight: bold;
 }
 
 .grid-item-5 > input {
-  font-size: 10px;
-  position: relative;
+  font-size: 8px;
+  padding: 0px;
+  margin: 0px;
 }
 
 #add_stock {
 	margin-left: 20px;
   margin-right:0px;
-  font-size: 15px;
-  color: black;
+  font-size: 20px;
+  
 }
 
 #textarea_stock {
   width: 100%;
-  height: 50%;
-  border-style: none; 
-  border-color: Transparent; 
-  
+  height: 75%;
+  border-style: solid; 
+  border-color: black; 
+  resize: none;
+  background-color: #f5f7f7;
 }
 
 .p_stock_info {
@@ -199,4 +209,152 @@ body {
 .span_earn {
   font-weight: bolder;
   color: green;
+}
+
+#div_background {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url(../images/background2.jpg);
+  /*background-image: url(https://www.w3schools.com/howto/img_parallax.jpg);*/
+  
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+#div_login {
+  position: absolute;
+  top: 50%;
+  left: 30%;
+}
+
+.test {
+  --link-color: #e6ebff;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  background-color: #f6f6f6;
+  border-radius: 3px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  padding: 0px 15px;
+  color: #304659;
+  height: 45px;
+  text-align: left;
+  -webkit-appearance: none;
+}
+
+.btn {
+--link-color: #e6ebff;
+box-sizing: border-box;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+outline: none;
+background: #d8137f;
+color: #fff;
+text-decoration: none;
+padding: 0px 30px;
+text-align: center;
+font-size: 17px;
+display: inline-block;
+border: none;
+cursor: pointer;
+height: 45px;
+margin-bottom: 15px;
+-webkit-appearance: none;
+}
+
+#div_title {
+  position: absolute;
+  top: 20%;
+  left: 40%;  
+}
+
+#div_title h2 {
+  --link-color: #e6ebff;
+  text-align: center;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  font-size: 55px;
+  line-height: 60px;
+  color: #ffff;
+  font-weight: 600;
+}
+
+#div_copyright {
+  position: absolute;
+  left: 45%;
+  bottom: 0px;
+}
+
+.pagination {
+  padding: 15px;
+}
+
+.pagination > a {
+  padding: 5px;
+  color: blue;
+}
+
+.pagination > a:link {
+  color: black;
+}
+
+a:visited {
+  color: black;
+}
+
+.grid-item-1 > ul:last-child > li:last-child {
+  margin-bottom: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  .grid-item-1 { grid-area: header; }
+  .grid-item-2 { grid-area: menu; }
+  .grid-item-3 { grid-area: main; }
+  .grid-item-4 { grid-area: right; }
+  .grid-item-5 { grid-area: footer; }
+
+  .grid-container {
+    padding: 1px;
+    display: grid;
+    grid-template:
+    'header header'
+    'menu menu'
+    'main footer';
+  }
+
+  .grid-item-2 {
+    height: 300px;
+  }
+
+  .grid-item-1, .grid-item-2,.grid-item-3, .grid-item-5 {
+    border-radius: 3px;
+  }
+
+  .grid-item-1 {
+    height: 100%;
+  }
+
+  .stock_list_item {
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .stock_item {
+    font-size: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  #textarea_stock {
+    resize: none;
+    width: 100%;
+    height: 40%;
+    border-style: solid; 
+    border-color: black; 
+    background-color: #f5f7f7;
+  }
 }
