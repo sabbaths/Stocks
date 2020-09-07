@@ -14,7 +14,7 @@
 		</div>	
 		<input id='input_hidden' type='hidden'>
 	";
-
+	echo "<div id='stock_list_item_div'>";
 	echo "<ul class ='stock_list_item'>
 	  		<li class='stock_item'>
 	  			CODE
@@ -44,13 +44,17 @@
 			 	</li>
 
 				<li id='' class='stock_item'>
-					<a id='$stock_id' href='' class='delete_stock' name='$stock_name'>DEL</a>
+					<a id='$stock_id' href='testestes' class='delete_stock' name='$stock_name'>DEL</a>
 			 	</li>
 
 		 	</ul>";
 	}
-	echo "</br><h7><a id='refresh_stock_list' href=''>REFRESH</a></h7></br>";
-	echo "<h7><a id='refresh_stock_list_update' href=''>REFRESH DB</a></h7></br>";
-	echo "<h7><span id='time_updated'>Last Updated:</span></h7>";
+	echo "</div>";
+	
+	
+	echo "<span class='span_test'><a id='refresh_stock_list' href=''>REFRESH</a></span>";
+	echo "<span class='span_test'><a id='refresh_stock_list_update' href=''>REFRESH DB</a></span>";
+	echo "<span class='span_test'><span id='time_updated'>Last Updated:</span></span>";
+	
 	//print_r( $database->computeStocks());
 ?>

@@ -15,7 +15,7 @@ class Database {
                 static::$servername = "localhost";
                 static::$username = "root"; //apgiaa godaddy.com
                 self::$password = "root";
-                self::$database = "localhost"; //apgiaa godaddy.com
+                self::$database = "stocks"; //apgiaa godaddy.com
             } else if (self::$environment == 2) { //godaddy
                 self::$servername = "localhost";
                 self::$username = "sabbaths"; //apgiaa godaddy.com
@@ -79,7 +79,7 @@ class Database {
             WHERE user_id = $user_id
                 AND page_id = $page_id
                 AND is_active = 1
-            ORDER BY name;";
+            ORDER BY name, page_id DESC;";
 
         $result = self::$connection->query($sql);   
 
@@ -144,7 +144,7 @@ class Database {
             $stock_id = self::$connection->insert_id;
             self::addStockInfo($stock_id, 0,0,0,0,0,0,0,0,0,0);
 
-            return 7001; //good
+            return [7001, $stock_id];
         } else {   
             echo self::$connection->error;
             return 7004; //error

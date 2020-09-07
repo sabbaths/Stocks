@@ -96,8 +96,6 @@ $(document).ready(function () {
 	$('.stock_list_item_page').click( function(e) {
 	  var page_id = $(this).text();
 	  var input_hidden = $('#input_hidden').val(page_id);
-	  console.log("page " + page_id);
-	  console.log("page hidden " + input_hidden.val());
 	  page_id_global = page_id;
 	  
 	  //call handler get stock by user and page
@@ -134,13 +132,13 @@ $(document).ready(function () {
 	function refreshStockListItem(stock_list) {
 		var stock_list = JSON.parse(stock_list);
 		var pagination = $('.pagination');
-		var stock_list_item_ul = $('.stock_list_item').empty();
+		//var stock_list_item_ul = $('.stock_list_item').not(':first').remove();
+		$('.stock_list_item').slice(1).remove();
+		var stock_list_item = $('.stock_list_item');
 
 		if(stock_list.length == 0) return;
 
-
-
-		for(var i = 0;i<=stock_list.length-1;i++) {
+		for(var i = stock_list.length-1;i>=0;i--) {
 			var stock_id = stock_list[i][0];
 			var stock_name = stock_list[i][1];
 
@@ -155,13 +153,14 @@ $(document).ready(function () {
 						 		0 \
 						 	</li> \
 							<li id='' class='stock_item'> \
-								<a id='"+stock_id+"' href='' class='delete_stock' name='"+stock_name+"'>DEL</a> \
+								<a id='"+stock_id+"' class='delete_stock'  href='' name='"+stock_name+"' '>DEL</a> \
 						 	</li> \
 		 			  </ul>";
 		 			  
-			pagination.after(ul_item);
-		}
 
+			stock_list_item.after(ul_item);
+		}
+		/*
 		var ul_item_first = "<ul class ='stock_list_item'> \
 						  		<li class='stock_item'> \
 						  			CODE \
@@ -174,7 +173,7 @@ $(document).ready(function () {
 						  	 	</li> \
 			 				</ul>";
 
-		pagination.after(ul_item_first);
+		pagination.after(ul_item_first); */
 	}
 	
 
@@ -457,14 +456,15 @@ $(document).ready(function () {
 	  		
 		}); */
 	}
-
-	$('.delete_stock').click(function (e) {
+	/*
+	function deleteStock() {
+		alert('delete stock');
 		e.preventDefault();
+		console.log('delete');
 		var stock_id = $(this).attr('id');
 		var stock_name = $(this).attr('name');		
 
 		if (confirm('Delete Stock? ' + stock_name)) {
-			
 
 			$.ajax({  
 			    type: 'POST',  
@@ -472,12 +472,36 @@ $(document).ready(function () {
 			    data: { stock_id: stock_id, 
 			    },
 			    success: function(response) {
-			    	location.reload();
+			    	console.log(response);
+			    	//location.reload();
 			    }
 			});
 
 		}
-	});	
+	}
+
+	$('.delete_stock').click(function (e) {
+		alert("DELETE");
+		e.preventDefault();
+		console.log('delete');
+		var stock_id = $(this).attr('id');
+		var stock_name = $(this).attr('name');		
+
+		if (confirm('Delete Stock? ' + stock_name)) {
+
+			$.ajax({  
+			    type: 'POST',  
+			    url: 'handlers/delete_stock.php', 
+			    data: { stock_id: stock_id, 
+			    },
+			    success: function(response) {
+			    	console.log(response);
+			    	//location.reload();
+			    }
+			});
+
+		}
+	});	*/
 	/*
 	$('.select_stock').click(function (e) {
 		console.log("select stock");
@@ -577,10 +601,30 @@ $(document).ready(function () {
 
 	$('#add_stock').click(function (e) {
 		e.preventDefault();
-		$("#refresh_stock_list").before("<li class='dataListItem' id='li_add_stock_input'><input id='input_add_stock' value='' size='6'><a id='a_add_stock_done' href='' onclick='saveAddedStock()'>DONE</a></li>");
+		$("#refresh_stock_list").before("<li class='dataListItem' id='li_add_stock_input'><input id='input_add_stock' value='' size='6'><button id='a_add_stock_done' onclick='saveAddedStock()'>DONE</button></li>");
 	});
+});
 
+$(document).on("click",".delete_stock",function(e) {
+	e.preventDefault();
+
+	var anchor = $(e.target).parent().parent().remove();
 	
+	var stock_id = $(this).attr('id');
+	var stock_name = $(this).attr('name');		
+
+	if (confirm('Delete Stock? ' + stock_name)) {
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/delete_stock.php', 
+		    data: { stock_id: stock_id, 
+		    },
+		    success: function(response) {
+		    	console.log(response);
+		    	//location.reload();
+		    }
+		});
+	}
 });
 
 $(document).on("click",".select_stock",function(e){
@@ -682,9 +726,27 @@ $(document).on("click",".select_stock",function(e){
 });
 
 function saveAddedStock() {
+
 	var page_id = $('#input_hidden').val();
 	var user_id = 1;
-	var stock_name = $('#input_add_stock').val();
+	var stock_name = $('#input_add_stock').val().toUpperCase();
+	var stock_list_item = $('.stock_list_item');
+	var stock_id = 99;
+
+	var ul_item = "<ul class ='stock_list_item'> \
+					<li id='' class='stock_item' name='"+stock_name+"'> \
+						<a id='"+stock_id+"' href='' class='select_stock' data_name='"+stock_name+"' data_id='"+stock_id+"' name='"+stock_name+"'>"+stock_name+"</a> \
+					</li> \
+				 	<li id='stock_item_last_"+stock_name+"' class='stock_item' data_name='last' data_id='"+stock_id+"'> \
+				 		0 \
+				 	</li> \
+				 	<li id='stock_item_change_"+stock_name+"' class='stock_item' data_name='change' data_id='"+stock_id+"'> \
+				 		0 \
+				 	</li> \
+					<li id='' class='stock_item'> \
+						<a id='"+stock_id+"' href='' class='delete_stock' name='"+stock_name+"'>DEL</a> \
+				 	</li> \
+				  </ul>";
 
 	if(!page_id) page_id = 1;
 
@@ -699,12 +761,16 @@ function saveAddedStock() {
 		    		user_id: user_id,
 		    },
 		    success: function(response) {
-		    	if(response == 7001) {
+		    	var response = JSON.parse(response);
+		    	console.log('Response ' + response);
+		    	if(response.status_code == 7001) {
 		    		console.log("SAVE ADDED STOCK" + response);
-		    		location.reload();
+		    		
+		    		stock_list_item.last().after(ul_item);
+
+		    		console.log('stock_id' + response.stock_id);
 		    	} else {
-		    		console.log("SAVE ADDED STOCK" + response);
-		    		console.log(response);
+		    		console.log("error saving added stock");
 		    	}
 		    }
 		});		
@@ -1084,12 +1150,7 @@ function loginModal(e) {
 	    	}
 	    }
 	});
-
-
-
 }
-
-testFetch();
 
 
 

@@ -78,7 +78,7 @@
 
 .grid-container {
   display: inline-grid;
-  grid-template-columns: 15% 65% 10% 10%;
+  grid-template-columns: 20% 60% 10% 10%;
   grid-template-rows: 100%;
   height: 120%;
   background-color: white;
@@ -310,6 +310,22 @@ a:visited {
   margin-bottom: 30px;
 }
 
+#div_test {
+  display: block;
+}
+
+.span_test {
+  display: block;
+  margin-top: 30px;
+}
+
+
+#stock_list_item_div {
+  display: block;
+  overflow: auto;
+}
+
+
 @media only screen and (max-width: 600px) {
   .grid-item-1 { grid-area: header; }
   .grid-item-2 { grid-area: menu; }
@@ -341,6 +357,7 @@ a:visited {
   .stock_list_item {
     font-size: 20px;
     width: 100%;
+    display: block;
   }
 
   .stock_item {

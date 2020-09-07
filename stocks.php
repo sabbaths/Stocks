@@ -28,23 +28,12 @@
     <div class="grid-container">
       <div class="grid-item-1">
         <h5><a id='add_stock' href=''>ADD STOCK</a></h5>
-        
-        
-        <!-- <ul id='stock_list'> -->
           <?php
             require('database_model_stock.php');
             require('web_scraper.php');
             include_once('list_stock.php');
-            
-
           ?>
-
-          
-        <!-- </ul> -->
-
-
       </div>
-
       <div class="grid-item-2">  
         <h5 id='header_thoughts'>JOURNAL</h5>
         <h5 id='header_stock_name'>STOCK</h5>
@@ -53,7 +42,6 @@
         <ul id='stock_info_ul'>
         </ul>
       </div>
-
       <div class="grid-item-3">
         <p class='p_stock_info' id='p_stock'>Stock</p><input id='input_stock' disabled >
         <p>Shares</p><input id='input_shares' value=0 onfocusout='compute()'>

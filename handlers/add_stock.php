@@ -12,7 +12,8 @@ $database->connectDB();
 
 $status_code = $database->addStock($user_id, $stock_name, $stock_text, $page_id);
 
-$response_data = [ 'status_code' => $status_code];
-echo json_encode( $status_code );
+$response_data = [ 'status_code' => $status_code[0], 
+	'stock_id' => $status_code[1]];
 
+echo json_encode($response_data);
 ?>
