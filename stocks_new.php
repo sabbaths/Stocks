@@ -54,7 +54,7 @@
       <h7>JOURNAL</h7>
       <h5 id='header_stock_name'>STOCK</h5>
       <h5 id='header_stock_price'>STOCK PRICE</h5>
-      <textarea id='textarea_stock' onfocusout='saveStockInfoUS()'></textarea>
+      <textarea id='textarea_stock' onfocusout='saveStockInfo()'></textarea>
     </div>  
     <div class="grid-pl">
       <h7>PL CALCULATOR</h7>

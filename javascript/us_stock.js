@@ -7,6 +7,28 @@ $(document).ready(function () {
 	$('#pl_us').hide();	
 });
 
+$(document).on("keyup","#textarea_stock",function(e){
+	var currentdate = new Date(); 
+	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	var datetime = "Last Log: " + currentdate.getDate() + "/"
+	                + (months[currentdate.getMonth()])  + "/" 
+	                + currentdate.getFullYear() + " @ "  
+	                + currentdate.getHours() + ":"  
+	                + currentdate.getMinutes() + ":" 
+	                + currentdate.getSeconds();
+
+		var key_pressed = event.keyCode;
+		var textarea_value = $(this).val();
+
+
+		console.log("key pressed " + key_pressed);
+
+		if(key_pressed == 191) {
+			console.log("add test");
+			$(this).val(textarea_value + datetime);
+		}
+});
+
 $(document).on("click",".stock_list_item_page",function(e){
 	var page_id = $(this).text();
 
@@ -37,6 +59,8 @@ $(document).on("click",".stock_list_item_page",function(e){
 $(document).on("change",':radio[name="rd_btn_cnty_stock"]',function(e){
 	var country_stock = $(this).val();
 	var grid_menu = $(".grid-menu");
+	var textarea_stock = $("#textarea_stock");
+	textarea_stock.val('');
 
 	grid_menu.children('.pagination').remove();
 	grid_menu.children('#stock_list_item_div').remove();
@@ -53,11 +77,21 @@ $(document).on("change",':radio[name="rd_btn_cnty_stock"]',function(e){
 		$('#risk_us').show();
 		$('#pl_ph').hide();
 		$('#pl_us').show();
+
+		textarea_stock.focusout(function() {
+		    saveStockInfoUS()
+		});
+
 	} else {
 		$('#risk_ph').show();
 		$('#risk_us').hide();
 		$('#pl_ph').show();
 		$('#pl_us').hide();
+
+		textarea_stock.focusout(function() {
+		    saveStockInfo()
+		});
+
 	}
 });
 
