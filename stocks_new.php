@@ -52,6 +52,8 @@
     </div>
     <div class="grid-journal">
       <h7>JOURNAL</h7>
+      <h5 id='header_stock_name'>STOCK</h5>
+      <h5 id='header_stock_price'>STOCK PRICE</h5>
       <textarea id='textarea_stock' onfocusout='saveStockInfoUS()'></textarea>
     </div>  
     <div class="grid-pl">
@@ -120,6 +122,12 @@
       </div>
       <div id ='pl_us'>
         <ul>
+          <li class='pl_us_ul_li'>
+            <span>Buy</span>
+            <input type="radio" id="rd_btn_pl_buy" name="rd_btn_pl" value="true" checked>
+            <span>Sell</span>
+            <input type="radio" id="rd_btn_pl_sell" name="rd_btn_pl" value="false">
+          </li>
           <!-- <li><span>Amount Invested</span><input id='plcalc_input_amt_invsted'></input></li>
           <li><span>Entry</span><input id='plcalc_input_entry'></input></li> -->
           <li><span>Stock ID</span><input id='input_stock' disabled value=0></input></li>

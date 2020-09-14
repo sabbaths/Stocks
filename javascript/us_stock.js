@@ -1,11 +1,38 @@
 $(document).ready(function () {
+	var page_id_global = 1;
+
 	$('#risk_ph').show();
 	$('#risk_us').hide();
 	$('#pl_ph').show();
 	$('#pl_us').hide();	
 });
 
+$(document).on("click",".stock_list_item_page",function(e){
+	var page_id = $(this).text();
 
+	if(page_id == 'Edit' || page_id == 'Hist') return;
+
+	var input_hidden = $('#input_hidden').val(page_id);
+	var country_stock = $("input[name=rd_btn_cnty_stock]:checked").val();
+	page_id_global = page_id;
+
+	//call handler get stock by user and page
+	$.ajax({  
+	    type: 'POST',  
+	    url: 'handlers/stock_list_item_page_handler.php', 
+	    data: { 
+			user_id: 1,
+			page_id: page_id,
+			country_stock: country_stock,
+	    },
+	    success: function(response) {
+	    	refreshStockListItem(response);
+	    },
+		error: function (xhr, ajaxOptions, thrownError) {
+			console.log("ERROR");
+		}
+	});
+});
 
 $(document).on("change",':radio[name="rd_btn_cnty_stock"]',function(e){
 	var country_stock = $(this).val();
@@ -51,7 +78,10 @@ $(document).on("click",".select_stock",function(e){
 		e.preventDefault();
 
 		$(".select_stock").css("font-weight", "normal");
+		$(".select_stock").css("color", "black");
 		$(this).css("font-weight", "bold");
+		$(this).css("font-decoration", "underline");
+		$(this).css("color", "blue");
 		
 		var country_stock = $("input[name=rd_btn_cnty_stock]:checked").val();
 		var stock_id = $(this).attr('id');
@@ -120,17 +150,17 @@ $(document).on("click",".select_stock",function(e){
 		var risk_input_units = $('#risk_input_units');
 		var risk_input_invest_amt = $('#risk_input_invest_amt');
 
-		plcalc_input_units.val('');
-		plcalc_input_entry2.val('');
-		plcalc_input_exit.val('');
-		plcalc_input_pl.val('');
+		plcalc_input_units.val(0);
+		plcalc_input_entry2.val(0);
+		plcalc_input_exit.val(0);
+		plcalc_input_pl.val(0);
 
-		risk_input_port.val('');
-		risk_input_risk.val('');
-		risk_input_entry.val('');
-		risk_input_exit.val('');
-		risk_input_units.val('');
-		risk_input_invest_amt.val('');
+		risk_input_port.val(0);
+		risk_input_risk.val(0);
+		risk_input_entry.val(0);
+		risk_input_exit.val(0);
+		risk_input_units.val(0);
+		risk_input_invest_amt.val(0);
 
 		console.log("select stock " + country_stock);
 
@@ -179,7 +209,7 @@ $(document).on("click",".select_stock",function(e){
 		    },
 		    success: function(response) {
 		    	console.log("RESPONSE WEB SCRAPE " + response);
-		    	header_stock_price.html(response);
+		    	header_stock_price.html("STOCK PRICE: " + response);
 		    },
 		      error: function (xhr, ajaxOptions, thrownError) {
 		      	console.log("ERROR");
@@ -232,6 +262,7 @@ function saveAddedStock() {
 	var country_stock = $("input[name=rd_btn_cnty_stock]:checked").val();
 
 	console.log("country stock: " + country_stock);
+	console.log("page: " + page_id);
 
 
 	input_stock.remove();
@@ -240,6 +271,8 @@ function saveAddedStock() {
 	$('.pagination a').show();
 
 	if(!page_id) page_id = 1;
+	if(page_id == 'Edit') page_id = 1;
+
 
 	if(stock_name == '') return;
 	//if(stock_name <> '') {
@@ -253,7 +286,7 @@ function saveAddedStock() {
 		    		country_stock: country_stock,
 		    },
 		    success: function(response) {
-		    	console.log(response);
+		    	console.log("add stock" + response);
 		    	var response = JSON.parse(response);
 		    	console.log('Response ' + response);
 		    	if(response.status_code == 7001) {
@@ -277,6 +310,8 @@ function saveAddedStock() {
 
 		    		stock_list_item.last().after(ul_item);
 
+		    	} else if(response.status_code == 7006){
+		    		alert('Duplicate');
 		    	} else {
 		    		console.log("error saving added stock");
 		    	}
@@ -287,7 +322,7 @@ function saveAddedStock() {
 
 function saveStockInfoUS() {
 	var id = $('#input_stock').val();
-	var buy_sell = 1;
+	var buy_sell = $("input[name='rd_btn_pl']:checked").val() == 'true' ? 1 : 0;
 	var bias = $('#textarea_stock').val();
 	var plcalc_input_units = $('#plcalc_input_units').val();// == null ? $('#input_shares').val() : 0;
 	var plcalc_input_entry2 = $('#plcalc_input_entry2').val(); //== null ? $('#input_entry').val() : 0;
@@ -302,7 +337,7 @@ function saveStockInfoUS() {
 	var risk_input_exit = $('#risk_input_exit').val();
 	var risk_input_units = $('#risk_input_units').val();
 	var risk_input_invest_amt = $('#risk_input_invest_amt').val();
-	console.log('test');
+	console.log('save stock info us ' + buy_sell);
 	
 	if(id != '') {
 		$.ajax({  
@@ -360,6 +395,7 @@ function btnCalculateRisk() {
 }
 
 function btnCalculatePL() {
+	var rd_btn_buy = $("input[name='rd_btn_pl']:checked").val() == 'true';
 	var plcalc_input_amt_invsted = $('#plcalc_input_amt_invsted').val();
 	var plcalc_input_entry = $('#plcalc_input_entry').val();
 	var plcalc_input_units = $('#plcalc_input_units').val();
@@ -371,7 +407,7 @@ function btnCalculatePL() {
 	this_stock.rate_position_opened = plcalc_input_entry2;
 	this_stock.rate_position_closed = plcalc_input_exit;
 	this_stock.units = plcalc_input_units;
-	this_stock.buy = true;
+	this_stock.buy = rd_btn_buy;
 	this_stock.computePL();
 	plcalc_input_pl.val(this_stock.computedPL);
 
@@ -652,6 +688,53 @@ function saveStockInfo() {
 		});		
 	}
 
+}
+
+function refreshStockListItem(stock_list) {
+	var stock_list = JSON.parse(stock_list);
+	var pagination = $('.pagination');
+	//var stock_list_item_ul = $('.stock_list_item').not(':first').remove();
+	$('.stock_list_item').slice(1).remove();
+	var stock_list_item = $('.stock_list_item');
+
+	if(stock_list.length == 0) return;
+
+	for(var i = stock_list.length-1;i>=0;i--) {
+		var stock_id = stock_list[i][0];
+		var stock_name = stock_list[i][1];
+
+		var ul_item = "<ul class ='stock_list_item'> \
+						<li id='' class='stock_item' name='"+stock_name+"'> \
+							<a id='"+stock_id+"' href='' class='select_stock' data_name='"+stock_name+"' data_id='"+stock_id+"' name='"+stock_name+"'>"+stock_name+"</a> \
+						</li> \
+					 	<li id='stock_item_last_"+stock_name+"' class='stock_item' data_name='last' data_id='"+stock_id+"'> \
+					 		0 \
+					 	</li> \
+					 	<li id='stock_item_change_"+stock_name+"' class='stock_item' data_name='change' data_id='"+stock_id+"'> \
+					 		0 \
+					 	</li> \
+						<li id='' class='stock_item'> \
+							<a id='"+stock_id+"' class='delete_stock'  href='' name='"+stock_name+"' '>DEL</a> \
+					 	</li> \
+	 			  </ul>";
+	 			  
+
+		stock_list_item.after(ul_item);
+	}
+	/*
+	var ul_item_first = "<ul class ='stock_list_item'> \
+					  		<li class='stock_item'> \
+					  			CODE \
+					  		</li> \
+					  	 	<li class='stock_item'> \
+					  	 		LAST \
+					  	 	</li> \
+					  	 	<li class='stock_item'> \
+					  	 		CHNG \
+					  	 	</li> \
+		 				</ul>";
+
+	pagination.after(ul_item_first); */
 }
 
 

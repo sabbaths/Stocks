@@ -193,11 +193,20 @@ class Database {
                 '".$page_id."',
                 '".$country_stock."')";
 
-        $sql_check_duplicate = "SELECT * FROM stocks WHERE name = $name";
+        $sql_check_duplicate = "
+            SELECT * 
+            FROM stocks 
+            WHERE name = '$name'
+                AND is_active = 1
+                AND stock_country = '$country_stock'
+                AND page_id = $page_id ";
+     
 
-        
+        $result = self::$connection->query($sql_check_duplicate);
 
-
+        if ($result->num_rows > 0) {
+            return [7006,7007];  
+        }
 
         if (self::$connection->query($sql_insert_student) === TRUE) {
             $stock_id = self::$connection->insert_id;
@@ -516,7 +525,7 @@ class Database {
                 WHERE
                     stock_id = $stock_id ";
 
-                echo $sql_update;
+        echo $sql_update;
 
         $result = self::$connection->query($sql);   
         $insert = true;

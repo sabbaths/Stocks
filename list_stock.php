@@ -8,28 +8,28 @@
 	echo "
 
 		<div class='pagination'>
-			<a id='add_stock' class ='stock_list_item_page' href='#'>Edit</a>
 			<a class ='stock_list_item_page' href='#'>1</a>
 			<a class ='stock_list_item_page' href='#'>2</a>
 			<a class ='stock_list_item_page' href='#'>3</a>
 			<a class ='stock_list_item_page' href='#'>4</a>
 			<a class ='stock_list_item_page' href='#'>5</a>
 			<a class ='stock_list_item_page' href='#'>Hist</a>
+			<a id='add_stock' class ='stock_list_item_page' href='#'>Edit</a>
 		</div>	
 		<input id='input_hidden' type='hidden'>
 	";
 	echo "<div id='stock_list_item_div'>";
 	echo "<ul class ='stock_list_item'>
-	  		<li class='stock_item'>
+	  		<li id='stock_item_hdr' class='stock_item'>
 	  			CODE
 	  		</li>
-	  	 	<li class='stock_item'>
+	  	 	<li id='stock_item_hdr' class='stock_item'>
 	  	 		LAST
 	  	 	</li>
-	  	 	<li class='stock_item'>
+	  	 	<li id='stock_item_hdr' class='stock_item'>
 	  	 		CHNG
 	  	 	</li>
-	  	 	<li class='stock_item'>
+	  	 	<li id='stock_item_hdr' class='stock_item'>
 	  	 		ACT
 	  	 	</li>
 	 	</ul>";
