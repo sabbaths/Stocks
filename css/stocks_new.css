@@ -1,0 +1,284 @@
+
+* {
+  font-family: Trebuchet MS;
+}
+
+body {
+  margin: 0px;
+}
+
+
+.grid-header { grid-area: header; }
+.grid-menu { grid-area: menu; }
+.grid-journal { grid-area: main; }
+.grid-pl { grid-area: right; }
+.grid-footer { grid-area: footer; }
+.grid-risk { grid-area: rightright; }
+
+.grid-container {
+  display: grid;
+  grid-template:
+    'header header header header header header'
+    'menu main main main right rightright'
+    'menu main main main right rightright'
+    'menu main main main right rightright'
+    'menu main main main right rightright'
+    'menu main main main right rightright'
+    'menu footer footer footer footer footer';
+  grid-gap: 5px;
+  background-color: #4b5d67;
+  padding: 5px;
+  height: 100vh;
+  margin: 0px;
+}
+
+.grid-header > span {
+  display: inline-block;
+}
+
+#ul_paging {
+  padding-left: 0px;
+  margin-top: 0px;
+}
+
+#ul_paging > li {
+  display: inline-block;
+  font-size: 15px;
+  padding: 5px;
+}
+
+.ul_stock_list > li{
+  display: inline-block;
+  font-size: 15px;
+  margin-right: 5px;
+}
+
+.ul_stock_list {
+  positon: relative;
+  text-align: left;
+  margin: 0px;
+  margin-left: 15px;
+  padding: 0px;
+  height: 15px;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  font-size: 30px;
+  padding: 0px;
+}
+
+.grid-journal {
+  display: block;
+}
+
+.grid-journal > textarea {
+  display: block;
+  height: 90%;
+  width: 90%;
+  margin-left: 5%;
+}
+
+.grid-pl > div > ul > li > span {
+  font-size: 10px;
+  height: 1px;
+}
+
+.grid-pl > div > ul {
+  text-align: left;
+}
+
+.grid-pl > div > ul > li {
+ display: block;
+}
+
+.grid-pl > div > ul > li > span {
+ display: block;
+}
+
+.grid-pl > div > ul > li > input {
+  margin: 0px;
+  height: 12px;
+  padding: 0px;
+  border: 1px;
+  font-size: 10px;
+}
+
+#floatleft {
+  float: left;
+  width: 30%;
+}
+
+#floatright {
+  float: right;
+  width: 45%;
+}
+
+.grid-risk > div > ul > li > span {
+  font-size: 10px;
+}
+
+.grid-risk > div > span{
+  font-size: 10px;
+}
+
+.grid-risk > div > ul {
+  text-align: left;
+}
+
+.grid-risk > div > ul > li {
+ display: block;
+}
+
+.grid-risk > div > ul > li > span {
+ display: block;
+}
+
+.grid-risk > div > ul > li:first-child > span {
+  display: inline-block;
+}
+
+#copyright_span {
+  font-size: 8px;
+}
+
+
+.grid-header {
+  padding-bottom: 0px;
+  padding-top: 0px;
+  height: 100px;
+}
+
+#header-top {
+  display: block;
+  height: 50px;
+  width:100%;
+  padding: 0px;
+}
+
+#header-menu {
+  display: inline-block;
+  height: 50px;
+  width: 100%;
+  padding: 0px;
+  background-color: #4a4a4a;
+}
+
+#header-menu > ul {
+  display: inline-block;
+  margin: 0px;
+  text-align: left;
+  position: relative;
+}
+
+#header-menu > ul > li{
+  display: inline-block;
+  font-size: 15px;
+  margin-right: 0px;
+  color: white;
+}
+
+
+#header-top {
+  display: block;
+  height: 50px;
+  width: 100%;
+  padding: 0px;
+  background-color: #1e222d;
+}
+
+#header-top > ul {
+ margin: 0px;
+ text-align: left; 
+}
+
+#header-top > ul > li{
+  display: inline-block;
+  font-size: 15px;
+  margin-right: 10px;
+  color: white;
+}
+
+.grid-journal > #textarea_stock {
+  border-color: white;
+}
+
+
+/**
+FROM OLD CSS MENU ITEM
+*/
+
+
+.pagination {
+  padding: 0px;
+  margin: 0px;
+}
+
+.pagination > a {
+  padding: 5px;
+  color: blue;
+  font-size: 15px;
+}
+
+.pagination > a:link {
+  color: black;
+}
+
+.stock_list_item {
+  display: block;
+  width: 60%;
+}
+
+.stock_list_item > li {
+  display: inline-block;
+}
+
+.stock_list_item:first-of-type {
+  display: block;
+} 
+
+#stock_list_item_div {
+  display: block;
+  overflow: auto;
+  margin: 0px;
+  padding: 0px;
+}
+
+.stock_item {
+  float:left;
+  list-style-type: none;
+  text-align: right;
+  width: 45px;
+  font-size: 12px;
+}
+
+.stock_item > a {
+  font-size: 12px;
+}
+/*
+.grid-menu > ul:last-child > li:last-child {
+  margin-bottom: 30px;
+} */
+
+.grid-menu {
+  border: 1px solid #000;
+}
+
+.grid-menu {
+  background-color: white;
+}
+
+.grid-menu > ul{
+  list-style-type: circle;
+}
+
+.grid-menu > ul > li{
+}
+
+.span_test {
+  display: block;
+  margin-top: 30px;
+  font-size: 8px;
+}
+

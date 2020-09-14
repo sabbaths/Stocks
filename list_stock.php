@@ -1,16 +1,20 @@
 <?php
+	require_once('database_model_stock.php');
+	$country_stock = isset($_REQUEST['country_stock']) ? $_REQUEST['country_stock'] : "PH";
 	$database = new Database();
 	$database->connectDB();
-	$stock_list = $database->getStocks();
+	$stock_list = $database->getStocks(1, 1, $country_stock);
 
 	echo "
 
 		<div class='pagination'>
-		  <a class ='stock_list_item_page' href='#'>1</a>
-		  <a class ='stock_list_item_page' href='#'>2</a>
-		  <a class ='stock_list_item_page' href='#'>3</a>
-		  <a class ='stock_list_item_page' href='#'>4</a>
-		  <a class ='stock_list_item_page' href='#'>5</a>
+			<a id='add_stock' class ='stock_list_item_page' href='#'>Edit</a>
+			<a class ='stock_list_item_page' href='#'>1</a>
+			<a class ='stock_list_item_page' href='#'>2</a>
+			<a class ='stock_list_item_page' href='#'>3</a>
+			<a class ='stock_list_item_page' href='#'>4</a>
+			<a class ='stock_list_item_page' href='#'>5</a>
+			<a class ='stock_list_item_page' href='#'>Hist</a>
 		</div>	
 		<input id='input_hidden' type='hidden'>
 	";
@@ -24,6 +28,9 @@
 	  	 	</li>
 	  	 	<li class='stock_item'>
 	  	 		CHNG
+	  	 	</li>
+	  	 	<li class='stock_item'>
+	  	 		ACT
 	  	 	</li>
 	 	</ul>";
 
@@ -48,13 +55,13 @@
 			 	</li>
 
 		 	</ul>";
-	}
-	echo "</div>";
+	} 
+	echo "</div>"; 
 	
 	
 	echo "<span class='span_test'><a id='refresh_stock_list' href=''>REFRESH</a></span>";
 	echo "<span class='span_test'><a id='refresh_stock_list_update' href=''>REFRESH DB</a></span>";
-	echo "<span class='span_test'><span id='time_updated'>Last Updated:</span></span>";
+	echo "<span class='span_test'><span id='time_updated'>Last Updated:</span></span>"; 
 	
 	//print_r( $database->computeStocks());
 ?>

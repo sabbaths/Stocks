@@ -72,13 +72,14 @@ class Database {
         return $return_array;
     }
 
-    function getStocks($user_id = 1, $page_id = 1) {
+    function getStocks($user_id = 1, $page_id = 1, $country_stocks = "PH") {
         $stocks_arr = array();
         $sql = "SELECT * 
             FROM stocks 
             WHERE user_id = $user_id
                 AND page_id = $page_id
                 AND is_active = 1
+                AND stock_country = '$country_stocks'
             ORDER BY name, page_id DESC;";
 
         $result = self::$connection->query($sql);   
@@ -129,14 +130,72 @@ class Database {
         //return $sql;      
     }
 
-    function addStock($id=1, $name, $text="", $page_id) {
+    function getStockInfoUS($stock_id) {
+        $stocks_arr = array();
+        $sql = "SELECT * FROM stock_info_us WHERE stock_id = $stock_id;";
+        $result = self::$connection->query($sql);   
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $stock_info_id = $row["stock_info_id"];
+                $stock_id = $row["stock_id"];
+                $invested_amount = $row["invested_amount"];
+                $units = $row["units"];
+                $entry = $row["entry"];
+                $exit = $row["exit"];
+                $buy_sell = $row["pl"];
+                $pl = $row["pl"];
+                $risk_buy_sell = $row["risk_buy_sell"];
+                $risk_port = $row["risk_port"];
+                $risk_pct = $row["risk_pct"];
+                $risk_entry = $row["risk_entry"];
+                $risk_exit = $row["risk_exit"];
+                $risk_buy_units = $row["risk_buy_units"];
+                $risk_invest_amt = $row["risk_invest_amt"];
+                $alert = $row["alert"];
+                $text = $row["text"];
+                
+                $temp_array = array(
+                    $stock_info_id, 
+                    $stock_id, 
+                    $invested_amount, 
+                    $units, 
+                    $entry,
+                    $exit,
+                    $buy_sell,
+                    $buy_sell,
+                    $pl,
+                    $risk_buy_sell,
+                    $risk_port,
+                    $risk_pct,
+                    $risk_entry,
+                    $risk_exit,
+                    $risk_buy_units,
+                    $risk_invest_amt,
+                    $alert,
+                    $text);
+                array_push($stocks_arr ,$temp_array);
+            }  
+        }
+        //print_r($courses_arr);
+        
+        return $stocks_arr; 
+        //return $sql;      
+    }
+
+    function addStock($id=1, $name, $text="", $page_id, $country_stock) {
         $sql_insert_student = "INSERT INTO stocks 
-                (name, text, user_id, page_id) 
+                (name, text, user_id, page_id, stock_country) 
                 VALUES ( 
                 '".strtoupper($name)."',
                 '".strtoupper($text)."',
                 '".$id."',
-                '".$page_id."')";
+                '".$page_id."',
+                '".$country_stock."')";
+
+        $sql_check_duplicate = "SELECT * FROM stocks WHERE name = $name";
+
+        
 
 
 
@@ -147,7 +206,7 @@ class Database {
             return [7001, $stock_id];
         } else {   
             echo self::$connection->error;
-            return 7004; //error
+            return [7004, 7005]; //error
         }
     }
 
@@ -382,6 +441,104 @@ class Database {
         }
     }
 
-    
+    function addStockInfoUS(
+        $stock_id,
+        $buy_sell,
+        $bias,
+        $plcalc_input_units,
+        $plcalc_input_entry2,
+        $plcalc_input_exit,
+        $plcalc_input_pl,
+        $rd_btn_buy,
+        $risk_input_port,
+        $risk_input_risk,
+        $risk_input_entry,
+        $risk_input_exit,
+        $risk_input_units,
+        $risk_input_invest_amt,
+        $alert = 0) {
+
+        $sql = "SELECT * FROM stock_info_us WHERE stock_id = $stock_id ";
+
+        $sql_insert_student = "INSERT INTO stock_info_us
+                (stock_id, 
+                invested_amount, 
+                units, 
+                entry, 
+                stock_info_us.exit, 
+                pl,
+                buy_sell, 
+                risk_buy_sell, 
+                risk_port, 
+                risk_pct,
+                risk_entry,
+                risk_exit,
+                risk_buy_units,
+                risk_invest_amt,
+                text,
+                alert) 
+                VALUES ( 
+                '".$stock_id."',
+                '". 0 ."',
+                '".$plcalc_input_units."',
+                '".$plcalc_input_entry2."',
+                '".$plcalc_input_exit."',
+                '".$plcalc_input_pl."',
+                '".$buy_sell."',
+                '".$rd_btn_buy."',
+                '".$risk_input_port."',
+                '".$risk_input_risk."',
+                '".$risk_input_entry."',
+                '".$risk_input_exit."',
+                '".$risk_input_units."',
+                '".$risk_input_invest_amt."',
+                '".$bias."',
+                '" . 0 . "')";
+
+
+        $sql_update = "
+                UPDATE stock_info_us
+                SET invested_amount = '0', 
+                    units = '$plcalc_input_units',
+                    entry = '$plcalc_input_entry2',
+                    stock_info_us.exit = '$plcalc_input_exit',
+                    pl = '$plcalc_input_pl',
+                    buy_sell = '$buy_sell',
+                    risk_buy_sell = '$rd_btn_buy',
+                    risk_port = '$risk_input_port',
+                    risk_pct = '$risk_input_risk',
+                    risk_entry = '$risk_input_entry',
+                    risk_exit = '$risk_input_exit',
+                    risk_buy_units = '$risk_input_units',
+                    risk_invest_amt = '$risk_input_invest_amt',
+                    alert = '$alert',
+                    text = '$bias'
+                WHERE
+                    stock_id = $stock_id ";
+
+                echo $sql_update;
+
+        $result = self::$connection->query($sql);   
+        $insert = true;
+
+        if ($result->num_rows > 0) { 
+            $insert = false;
+        }
+
+        if($insert) {
+            if(self::$connection->query($sql_insert_student) == TRUE) {
+                return 1511;
+            } else {
+                return self::$connection->error; 
+            }
+        } else {
+            if(self::$connection->query($sql_update) == TRUE) {
+                return 1522;    
+            } else {
+                return 1533;
+            }
+            
+        }
+    }    
     
 }

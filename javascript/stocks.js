@@ -5,8 +5,9 @@ $(document).ready(function () {
 
 	$( "#textarea_stock").keyup(function(event) {
 		var currentdate = new Date(); 
+		var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 		var datetime = "Last Log: " + currentdate.getDate() + "/"
-		                + (currentdate.getMonth()+1)  + "/" 
+		                + (months[currentdate.getMonth()])  + "/" 
 		                + currentdate.getFullYear() + " @ "  
 		                + currentdate.getHours() + ":"  
 		                + currentdate.getMinutes() + ":" 
@@ -601,6 +602,9 @@ $(document).ready(function () {
 
 	$('#add_stock').click(function (e) {
 		e.preventDefault();
+		var textarea_stock = $('#textarea_stock');
+		
+		textarea_stock.val(" ");
 		$("#refresh_stock_list").before("<li class='dataListItem' id='li_add_stock_input'><input id='input_add_stock' value='' size='6'><button id='a_add_stock_done' onclick='saveAddedStock()'>DONE</button></li>");
 	});
 });
@@ -731,22 +735,9 @@ function saveAddedStock() {
 	var user_id = 1;
 	var stock_name = $('#input_add_stock').val().toUpperCase();
 	var stock_list_item = $('.stock_list_item');
-	var stock_id = 99;
+	var input_stock = $('#li_add_stock_input');
+	var a_add_stock_done = $('#a_add_stock_done');
 
-	var ul_item = "<ul class ='stock_list_item'> \
-					<li id='' class='stock_item' name='"+stock_name+"'> \
-						<a id='"+stock_id+"' href='' class='select_stock' data_name='"+stock_name+"' data_id='"+stock_id+"' name='"+stock_name+"'>"+stock_name+"</a> \
-					</li> \
-				 	<li id='stock_item_last_"+stock_name+"' class='stock_item' data_name='last' data_id='"+stock_id+"'> \
-				 		0 \
-				 	</li> \
-				 	<li id='stock_item_change_"+stock_name+"' class='stock_item' data_name='change' data_id='"+stock_id+"'> \
-				 		0 \
-				 	</li> \
-					<li id='' class='stock_item'> \
-						<a id='"+stock_id+"' href='' class='delete_stock' name='"+stock_name+"'>DEL</a> \
-				 	</li> \
-				  </ul>";
 
 	if(!page_id) page_id = 1;
 
@@ -766,9 +757,26 @@ function saveAddedStock() {
 		    	if(response.status_code == 7001) {
 		    		console.log("SAVE ADDED STOCK" + response);
 		    		
-		    		stock_list_item.last().after(ul_item);
+		    		var stock_id = response.stock_id;
+					var ul_item = "<ul class ='stock_list_item'> \
+									<li id='' class='stock_item' name='"+stock_name+"'> \
+										<a id='"+stock_id+"' href='' class='select_stock' data_name='"+stock_name+"' data_id='"+stock_id+"' name='"+stock_name+"'>"+stock_name+"</a> \
+									</li> \
+								 	<li id='stock_item_last_"+stock_name+"' class='stock_item' data_name='last' data_id='"+stock_id+"'> \
+								 		0 \
+								 	</li> \
+								 	<li id='stock_item_change_"+stock_name+"' class='stock_item' data_name='change' data_id='"+stock_id+"'> \
+								 		0 \
+								 	</li> \
+									<li id='' class='stock_item'> \
+										<a id='"+stock_id+"' href='' class='delete_stock' name='"+stock_name+"'>DEL</a> \
+								 	</li> \
+								  </ul>";
 
-		    		console.log('stock_id' + response.stock_id);
+		    		stock_list_item.last().after(ul_item);
+		    		input_stock.remove();
+		    		a_add_stock_done.remove();
+
 		    	} else {
 		    		console.log("error saving added stock");
 		    	}
