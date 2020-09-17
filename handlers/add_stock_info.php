@@ -14,12 +14,24 @@ $p5 = isset($_REQUEST['p5']) ? $_REQUEST['p5'] : 0;
 $p10 = isset($_REQUEST['p10']) ? $_REQUEST['p10'] : 0;
 $alert = isset($_REQUEST['alert']) ? $_REQUEST['alert'] : 0;
 
+$input_entry_position = isset($_REQUEST['input_entry_position']) ? $_REQUEST['input_entry_position'] : 0;
+$input_exit_position = isset($_REQUEST['input_exit_position']) ? $_REQUEST['input_exit_position'] : 0;
+$input_capital_position = isset($_REQUEST['input_capital_position']) ? $_REQUEST['input_capital_position'] : 0;
+$input_risk_perc_position = isset($_REQUEST['input_risk_perc_position']) ? $_REQUEST['input_risk_perc_position'] : 0;
+$input_risk_position = isset($_REQUEST['input_risk_position']) ? $_REQUEST['input_risk_position'] : 0;
+$input_buyshares_position = isset($_REQUEST['input_buyshares_position']) ? $_REQUEST['input_buyshares_position'] : 0;
+
 
 $database = new Database();
 $database->connectDB();
 
 $status_code = $database->addStockInfo(
-	$stock_id,$bias,$shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert);
+	$stock_id,$bias,$shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert, $input_entry_position,
+		$input_exit_position,
+		$input_capital_position,
+		$input_risk_perc_position,
+		$input_risk_position,
+		$input_buyshares_position);
 
 $response_data = [ 'status_code' => $status_code];
 echo json_encode( $status_code );

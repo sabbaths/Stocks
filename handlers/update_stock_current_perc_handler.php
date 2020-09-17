@@ -15,6 +15,9 @@ $database->connectDB();
 $stock_list_arr = $database->getStocks();
 
 for($counter=0;$counter<=count($stock_list_arr)-1;$counter++) {
+	try {
+
+	echo $counter;
 	$stock = $stock_list_arr[$counter];
 	$stock_id = $stock[0];
 	$stock_name = $stock[1];
@@ -23,16 +26,26 @@ for($counter=0;$counter<=count($stock_list_arr)-1;$counter++) {
 
 	$web_scrape = new NWebScraperPeso($what_price);
 	$price = $web_scrape->getStockLast($stock_name);
-
+	$price = str_replace("<div class=\"large-3 columns\"> <span style=\"color:#FF4C4C\">","<span id=\"span_ws_price\">",$price);
+	$price = str_replace("<div class=\"large-3 columns\"> <span style=\"color:#18C718\">","<span id=\"span_ws_price\">",$price);
+	$price = str_replace("<div class=\"large-3 columns\"> <span style=\"color:\">","<span id=\"span_ws_price\">",$price);
+	$price = str_replace("</a> </div>","</span>",$price);
 	
 	//if($price >= 0)
 		$database->updateStockCurrentPrice($stock_id, $price, $what_price);
 
 	//$web_scrape_perc = new NWebScraper($what_price_perc);
 	$price_perc = $web_scrape->getStockChangePerc($stock_name);
-
+	$price_perc = str_replace("<div class=\"large-3 columns\"> <span style=\"color:#FF4C4C\">","<span id=\"span_ws_price\">",$price_perc);
+	$price_perc = str_replace("<div class=\"large-3 columns\"> <span style=\"color:#18C718\">","<span id=\"span_ws_price\">",$price_perc);
+	$price_perc = str_replace("<div class=\"large-3 columns\"> <span style=\"color:\">","<span id=\"span_ws_price\">",$price_perc);
+	$price_perc = str_replace("</a> </div>","</span>",$price_perc);
 	//if($price_perc >= 0)
 		$database->updateStockCurrentPrice($stock_id, $price_perc, $what_price_perc); 
+
+	} catch (Exception $e) {
+		echo $e;
+	}
 
 }
 

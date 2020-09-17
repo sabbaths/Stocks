@@ -27,6 +27,11 @@ class Database {
                 self::$password = "MxWzDm0K2TM";
                 //self::$password = "ac2am9jlqwxl0";
                 self::$database = "epiz_26302129_stocks"; //apgiaa 
+            } else if (self::$environment == 4) { //heroku
+                self::$servername = "us-cdbr-east-02.cleardb.com";
+                self::$username = "bcc35f095e072b"; 
+                self::$password = "66fe0a01";
+                self::$database = "heroku_a50ca651fcd79c1"; //apgiaa 
             }
         } catch(Exception $e) {
 
@@ -118,9 +123,21 @@ class Database {
                 $p2 = $row["p2"];
                 $p5 = $row["p5"];
                 $p10 = $row["p10"];
-                $alert_price = $row["alert"];
+                $alerted = $row["alerted"];
+                $risk_entry = $row["risk_entry"];
+                $risk_exit = $row["risk_exit"];
+                $risk_capital = $row["risk_capital"];
+                $risk_perc = $row["risk_perc"];
+                $risk_position = $row["risk_position"];
+                $risk_shares = $row["risk_shares"];
                 
-                $temp_array = array($stock_info_id, $stock_id, $name, $text, $shares, $entry, $exit, $be, $p1, $p2, $p5, $p10, $alert_price);
+                $temp_array = array($stock_info_id, $stock_id, $name, $text, $shares, $entry, $exit, $be, $p1, $p2, $p5, $p10, $alert_price, $alerted,
+                    $risk_entry,
+                    $risk_exit,
+                    $risk_capital,
+                    $risk_perc,
+                    $risk_position,
+                    $risk_shares);
                 array_push($stocks_arr ,$temp_array);
             }  
         }
@@ -208,13 +225,15 @@ class Database {
             return [7006,7007];  
         }
 
+        echo $sql_insert_student;
+
         if (self::$connection->query($sql_insert_student) === TRUE) {
             $stock_id = self::$connection->insert_id;
-            self::addStockInfo($stock_id, 0,0,0,0,0,0,0,0,0,0);
+            self::addStockInfo($stock_id, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 
             return [7001, $stock_id];
         } else {   
-            echo self::$connection->error;
+            //echo self::$connection->error;
             return [7004, 7005]; //error
         }
     }
@@ -388,7 +407,7 @@ class Database {
         if($what_price != 0) {
             $sql_update_current_price = " UPDATE stock_info SET change_perc = '$price' WHERE stock_id = $stock_id ";
         } 
-        
+        echo $sql_update_current_price;
         
         if (self::$connection->query($sql_update_current_price) === TRUE) {
             return $sql_update_current_price; //good
@@ -399,12 +418,24 @@ class Database {
 
     }
 
-    function addStockInfo($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert=0) {
+    function addStockInfo($stock_id, $bias, $shares,$entry,$exit,$be,$p1,$p2,$p5,$p10,$alert, 
+            $input_entry_position,
+            $input_exit_position,
+            $input_capital_position,
+            $input_risk_perc_position,
+            $input_risk_position,
+            $input_buyshares_position) {
 
         $sql = "SELECT * FROM stock_info WHERE stock_id = $stock_id ";
 
         $sql_insert_student = "INSERT INTO stock_info 
-                (stock_id, name, text, shares, entry, stock_exit, be, p1, p2, p5,p10,alert) 
+                (stock_id, name, text, shares, entry, stock_exit, be, p1, p2, p5,p10,alert,
+                    risk_entry,
+                    risk_exit,
+                    risk_capital,
+                    risk_perc,
+                    risk_position,
+                    risk_shares) 
                 VALUES ( 
                 '".$stock_id."',
                 '"."none"."',
@@ -417,7 +448,13 @@ class Database {
                 '".$p2."',
                 '".$p5."',
                 '".$p10."',
-                '".$alert."')";
+                '".$alert."',
+                '".$input_entry_position."',
+                '".$input_exit_position."',
+                '".$input_capital_position."',
+                '".$input_risk_perc_position."',
+                '".$input_risk_position."',
+                '".$input_buyshares_position."')";
         $sql_update = "
                 UPDATE stock_info
                 SET name = 'none', 
@@ -430,6 +467,12 @@ class Database {
                     p2 = '$p2',
                     p5 = '$p5',
                     p10 = '$p10',
+                    risk_entry = '$input_entry_position',
+                    risk_exit = '$input_exit_position',
+                    risk_capital = '$input_capital_position',
+                    risk_perc = '$input_risk_perc_position',
+                    risk_position = '$input_risk_position',
+                    risk_shares = '$input_buyshares_position',
                     alert = '$alert'
                 WHERE
                     stock_id = $stock_id ";

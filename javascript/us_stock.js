@@ -5,6 +5,275 @@ $(document).ready(function () {
 	$('#risk_us').hide();
 	$('#pl_ph').show();
 	$('#pl_us').hide();	
+
+	$('#btn_login').click(function (e) {
+		//check database username and password
+		var username = $('#input_login_un').val();
+		var password = $('#input_login_pw').val();
+
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/login_handler.php', 
+		    data: { username: username, 
+		    		password: password,
+		    },
+		    success: function(response) {
+		    	console.log(response);
+		    	var response_json = JSON.parse(response);	    	
+		    	var status_code = response_json[0]; 
+		    	var user_id = response_json[1];
+
+		    	if(status_code == '1001' && user_id != '0') {
+					$.ajax({  
+					    type: 'POST',  
+					    url: 'stocks.php', 
+					    data: { username: username, 
+					    },
+					    success: function(response) {
+					    },
+						error: function (xhr, ajaxOptions, thrownError) {
+							console.log("SESSION ERROR");
+						}
+					});
+
+		    		//login_modal.css("display","none");
+		    		post('stocks.php', {username: 'username'});
+
+
+		    	} else if(status_code == '1001' && user_id == '0') {
+		    		alert("Invalid Username OR Password")
+		    	} else {
+		    		alert("Server Error")
+		    	}
+		    }
+		});
+	});	
+
+	function post(path, params, method='post') {
+
+	  // The rest of this code assumes you are not using a library.
+	  // It can be made less wordy if you use one.
+	  const form = document.createElement('form');
+	  form.method = method;
+	  form.action = path;
+
+	  for (const key in params) {
+	    if (params.hasOwnProperty(key)) {
+	      const hiddenField = document.createElement('input');
+	      hiddenField.type = 'hidden';
+	      hiddenField.name = key;
+	      hiddenField.value = params[key];
+
+	      form.appendChild(hiddenField);
+	    }
+	  }
+
+	  document.body.appendChild(form);
+	  form.submit();
+	}
+
+
+	/*WEB SCRAPING*/
+	$('#refresh_stock_list').click( function(e) {
+	  e.preventDefault();
+	  updateStockWatchList();
+	  //updateStockWatchListDatabase();
+	  //checkAlertPriceStockList();
+	  //doSomething(1);
+	  //getAlertPrice(22);
+	});
+
+	$('#refresh_stock_list_update').click( function(e) {
+	  e.preventDefault();
+	  //updateStockWatchList();
+	  updateStockWatchListDatabase();
+	  //checkAlertPriceStockList();
+	  //doSomething(1);
+	  //getAlertPrice(22);
+	});
+
+	function updateStockWatchList() {
+		$('.stock_list_item li').each(function(index, value) {
+			var t0 = performance.now()
+			var li_id = value.id;
+	  		
+	  		var test_0 = $( "li[id='"+li_id+"']" );
+	  		var test_1 = $( "li[id='"+li_id+"']" ).attr("id");
+	  		var test_2 = $( "li[id='"+li_id+"']" ).attr("data_name");
+	  		var li_stock_id = $( "li[id='"+li_id+"']" ).attr("data_id");
+
+	  		console.log("test 1" + test_1);
+	  		if(typeof test_1 !== "undefined" && test_1 != 'stock_item_hdr' && test_1 != '') {
+	  			console.log("test 1---------------------1" + test_1);
+	  			var stock_name = test_1.split('_')[3];
+	  			var what_price = 0;
+	  			test_0.html("0");	
+	  			if(test_2 != 'last') {
+	  				what_price = 1;
+	  			}
+
+	  			//GET CURRENT PRICE VIA AJAX AND FROM DATABASE
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/get_stock_current_price.php', 
+
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+			  			if(test_2 == 'last') {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				if (response != null || undefined) {
+			  					test_0.html(response);
+			  				} else {
+			  					test_0.html(0);	
+			  				}
+			  			} else {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				if (response != null || undefined) {
+			  					test_0.html(response);	
+			  				} else {
+			  					test_0.html(0);	
+			  				}
+			  				
+			  			}
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      	test_0.html(0);
+				      }
+				});
+
+	  			//SET CURRENT PRICE, CHANGE PERC IN DATABASE	
+				/*
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/update_stock_current_perc_handler.php', 
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+				    	//console.log("RESPONSE WEB SCRAPE " + response + "INDEX: " + index);
+				    	//header_stock_price.html(response);
+
+			  			if(test_2 == 'last') {
+			  				//test_0.html(response);
+			  				//console.log("UPDATED LAST PRICE OF " + stock_name);
+			  			} else {
+			  				//test_0.html(response);
+			  				//console.log("UPDATED LAST PERC OF " + stock_name);
+			  			}
+						//var t1 = performance.now()
+						//console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      }
+				}); */
+	  		}
+	  		
+		});
+	}
+
+
+	function updateStockWatchListDatabase() {
+		console.log("UPDATE PROCESSING PRICE, PERC of DATABASE");
+
+		$.ajax({  
+		    type: 'POST',  
+		    url: 'handlers/update_stock_current_perc_handler.php', 
+		    data: { 
+				stock_id: 0, 
+		    	stock_name: 0, 
+		    	what_price: 0, 
+		    },
+		    success: function(response) {
+				console.log("UPDATED PRICE, PERC of DATABASE");
+		    },
+		      error: function (xhr, ajaxOptions, thrownError) {
+		      	console.log("ERROR");
+		      }
+		});
+
+		/*
+		$('.stock_list_item li').each(function(index, value) {
+			var t0 = performance.now()
+			var li_id = value.id;
+	  		
+	  		var test_0 = $( "li[id='"+li_id+"']" );
+	  		var test_1 = $( "li[id='"+li_id+"']" ).attr("id");
+	  		var test_2 = $( "li[id='"+li_id+"']" ).attr("data_name");
+	  		var li_stock_id = $( "li[id='"+li_id+"']" ).attr("data_id");
+
+	  		
+	  		if(typeof test_1 !== "undefined") {
+	  			var stock_name = test_1.split('_')[3];
+	  			var what_price = 0;
+	  			
+	  			if(test_2 != 'last') {
+	  				what_price = 1;
+	  			}
+
+	  			//GET CURRENT PRICE VIA AJAX AND FROM DATABASE
+				/*
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/get_stock_current_price.php', 
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+			  			if(test_2 == 'last') {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				test_0.html(response);
+			  			} else {
+			  				//console.log("GET LAST PRICE OF " + stock_name);
+			  				test_0.html(response);
+			  			}
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      }
+				}); 
+
+	  			//SET CURRENT PRICE, CHANGE PERC IN DATABASE	
+				$.ajax({  
+				    type: 'POST',  
+				    url: 'handlers/update_stock_current_perc_handler.php', 
+				    data: { 
+						stock_id: li_stock_id, 
+				    	stock_name: stock_name, 
+				    	what_price: what_price, 
+				    },
+				    success: function(response) {
+				    	//console.log("RESPONSE WEB SCRAPE " + response + "INDEX: " + index);
+				    	//header_stock_price.html(response);
+
+			  			if(test_2 == 'last') {
+			  				//test_0.html(response);
+			  				console.log("UPDATED LAST PRICE OF " + stock_name);
+			  			} else {
+			  				//test_0.html(response);
+			  				console.log("UPDATED LAST PERC OF " + stock_name);
+			  			}
+						//var t1 = performance.now()
+						//console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+				    },
+				      error: function (xhr, ajaxOptions, thrownError) {
+				      	console.log("ERROR");
+				      }
+				});
+	  		}
+	  		
+		}); */
+	}
+	/*WEB SCRAPING*/
 });
 
 $(document).on("keyup","#textarea_stock",function(e){
@@ -138,6 +407,13 @@ $(document).on("click",".select_stock",function(e){
 		var input_cl10 = $('#input_cl10');
 		var input_alert = $('#input_alert');
 
+		var input_entry_position = $('#input_entry_position');
+		var input_exit_position = $('#input_exit_position');
+		var input_capital_position = $('#input_capital_position');
+		var input_risk_perc_position = $('#input_risk_perc_position');
+		var input_risk_position = $('#input_risk_position');
+		var input_buyshares_position = $('#input_buyshares_position');
+
 		var p_exit = $('#p_exit').html("Exit:");
 		var p_be = $('#p_be').html("Breakeven:");
 		var p_1 = $('#p_1').html("1:");
@@ -171,6 +447,12 @@ $(document).on("click",".select_stock",function(e){
 		input_alert.val(0);
 		textarea_bias.val('');
 		input_stock.val(stock_id);
+		input_entry_position.val(0);
+		input_exit_position.val(0);
+		input_capital_position.val(0);
+		input_risk_perc_position.val(0);
+		input_risk_position.val(0);
+		input_buyshares_position.val(0);
 
 		var plcalc_input_units = $('#plcalc_input_units');
 		var plcalc_input_entry2 = $('#plcalc_input_entry2');
@@ -215,6 +497,13 @@ $(document).on("click",".select_stock",function(e){
 			    	input_exit.val(stock_info_array[0][6]);
 			    	input_alert.val(stock_info_array[0][12]);
 
+			    	input_entry_position.val(stock_info_array[0][14]);
+			    	input_exit_position.val(stock_info_array[0][15]);
+			    	input_capital_position.val(stock_info_array[0][16]);
+			    	input_risk_perc_position.val(stock_info_array[0][18]);
+			    	input_risk_position.val(stock_info_array[0][17]);
+			    	input_buyshares_position.val(stock_info_array[0][19]);
+
 			    	if(parseFloat(input_shares) != 0 && parseFloat(input_entry) != 0) {
 			    		compute();
 			    		computeExit()
@@ -233,6 +522,10 @@ $(document).on("click",".select_stock",function(e){
 			    	risk_input_units.val(stock_info_array[0][14]);
 			    	risk_input_invest_amt.val(stock_info_array[0][15]);
 		    	}
+		    	   
+		    	console.log('set textarea to btom');
+    			if(textarea_bias.length)
+       				textarea_bias.scrollTop(textarea_bias[0].scrollHeight - textarea_bias.height());
 		    }
 		});
 		
@@ -295,9 +588,6 @@ function saveAddedStock() {
 	var inpput_add_stock = $('#input_add_stock');
 	var country_stock = $("input[name=rd_btn_cnty_stock]:checked").val();
 
-	console.log("country stock: " + country_stock);
-	console.log("page: " + page_id);
-
 
 	input_stock.remove();
 	a_add_stock_done.remove();
@@ -307,6 +597,10 @@ function saveAddedStock() {
 	if(!page_id) page_id = 1;
 	if(page_id == 'Edit') page_id = 1;
 
+	console.log("country stock: " + country_stock);
+	console.log("page: " + page_id);
+	console.log("stock_name: " + stock_name);
+	console.log("user_id: " + user_id);
 
 	if(stock_name == '') return;
 	//if(stock_name <> '') {
@@ -349,7 +643,12 @@ function saveAddedStock() {
 		    	} else {
 		    		console.log("error saving added stock");
 		    	}
-		    }
+		    }, error: function (xhr, ajaxOptions, thrownError) {
+				console.log("SESSION ERROR");
+				console.log(xhr);
+				console.log(ajaxOptions);
+				console.log(thrownError);
+			}
 		});		
 	//}
 }
@@ -548,6 +847,8 @@ function computePosition() {
 			console.log("risk " + risk);
 			console.log("entry_exit " + entry_exit);
 			input_buyshares.val(risk/entry_exit);
+
+			saveStockInfo();
 		}
 	}
 }
@@ -684,6 +985,8 @@ function computeStocks(shares, entry, exit, first_loop) {
 }
 
 function saveStockInfo() {
+	console.log("save stock info");
+
 	var id = $('#input_stock').val();
 	var bias = $('#textarea_stock').val();
 	var shares = $('#input_shares').val();// == null ? $('#input_shares').val() : 0;
@@ -695,6 +998,16 @@ function saveStockInfo() {
 	var p5 = $('#input_5').val(); //== null ? $('#input_10').val() : 0;
 	var p10 = $('#input_10').val(); //== null ? $('#input_10').val() : 0;
 	var alert = $('#input_alert').val();
+	alert = 0;
+
+	var input_entry_position = $('#input_entry_position').val();
+	var input_exit_position = $('#input_exit_position').val();
+	var input_capital_position = $('#input_capital_position').val();
+	var input_risk_perc_position = $('#input_risk_perc_position').val();
+	var input_risk_position = $('#input_risk_position').val();
+	var input_buyshares_position = $('#input_buyshares_position').val();
+
+	console.log("input_entry_position" + input_entry_position);
 
 	if(id != '') {
 		$.ajax({  
@@ -711,6 +1024,12 @@ function saveStockInfo() {
 		    		p5: p5,
 		    		p10: p10, 
 		    		alert: alert, 
+		    		input_entry_position: input_entry_position, 
+		    		input_exit_position: input_exit_position, 
+		    		input_capital_position: input_capital_position, 
+		    		input_risk_perc_position: input_risk_perc_position, 
+		    		input_risk_position: input_risk_position, 
+		    		input_buyshares_position: input_buyshares_position, 
 		    },
 		    success: function(response) {
 		    	if(response == 7001) {
@@ -770,6 +1089,9 @@ function refreshStockListItem(stock_list) {
 
 	pagination.after(ul_item_first); */
 }
+
+
+
 
 
 var us_stock = {

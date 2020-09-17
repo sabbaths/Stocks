@@ -1,3 +1,11 @@
+#span_ws_price {
+  font-size: 10px;
+}
+
+
+#textarea_date {
+  font-weight: bold;
+}
 
 * {
   font-family: Trebuchet MS;
@@ -69,10 +77,6 @@ body {
   padding: 0px;
 }
 
-.grid-journal > #textarea_stock {
-  border-color: white;
-}
-
 .grid-journal {
   display: block;
 }
@@ -82,7 +86,8 @@ body {
   height: 80%;
   width: 90%;
   margin-left: 5%;
-  font-weight: bold;
+  font-weight: normal;
+  font-size: 12px;
 }
 
 .grid-journal > h7 {
@@ -310,4 +315,97 @@ FROM OLD CSS MENU ITEM
   margin-top: 30px;
   font-size: 8px;
 }
+
+
+
+/**
+  MOBILE DEVICE 
+*/
+@media only screen and (max-device-width: 700px) {
+  body {
+
+  }
+
+  .grid-header { grid-area: header; }
+  .grid-menu { grid-area: menu; }
+  .grid-journal { grid-area: main; }
+  .grid-pl { grid-area: right; }
+  .grid-footer { grid-area: footer; }
+  .grid-risk { grid-area: rightright; }
+
+  .grid-header {
+    height: 100px;
+  }
+
+  #header-top {
+    height: 40px;
+  }
+
+  #header-top > ul > li{
+    font-size: 8px;
+  }
+
+  #header-menu {
+    height: 1000px;
+  }
+
+  #header-menu > ul > li {
+    font-size: 20px;
+  }
+
+  .grid-menu {
+    height: 1000px;
+  }
+
+  .grid-menu > div > ul > li{
+    font-size: 35px;
+  }
+
+  .grid-menu > div > ul > li > a {
+    font-size: 35px;
+  }  
+
+  .grid-journal {
+    height: 400px;
+  }
+
+  #floatleft {
+    float: left;
+    width: 20%;
+  }
+
+  #floatright {
+    float: right;
+  }
+
+  #textarea_stock {
+    height: 300px;
+    border: 1px black;
+    border-style: solid;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template:
+      'header '
+      'menu'
+      'main'
+      'right'
+      'rightright'
+      'footer';
+    grid-gap: 5px;
+    background-color: #4b5d67;
+    padding: 5px;
+    height: 100%;
+    margin: 0px;
+  }
+
+  .grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-size: 30px;
+    padding: 0px;
+  }
+}
+
 
