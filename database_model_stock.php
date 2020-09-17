@@ -225,8 +225,6 @@ class Database {
             return [7006,7007];  
         }
 
-        echo $sql_insert_student;
-
         if (self::$connection->query($sql_insert_student) === TRUE) {
             $stock_id = self::$connection->insert_id;
             self::addStockInfo($stock_id, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
