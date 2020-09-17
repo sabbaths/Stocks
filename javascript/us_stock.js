@@ -19,6 +19,11 @@ $(document).ready(function () {
 		    },
 		    success: function(response) {
 		    	console.log(response);
+
+		    	if(response == 'Connection failed: No such file or directory') {
+		    		alert("Server/Database Connection Error: " + response);
+		    	}
+
 		    	var response_json = JSON.parse(response);	    	
 		    	var status_code = response_json[0]; 
 		    	var user_id = response_json[1];
