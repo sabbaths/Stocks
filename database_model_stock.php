@@ -2,7 +2,7 @@
 
 class Database {
 
-    private static $environment = 4; //1 for dev, 2 godaddy
+    private static $environment = 1; //1 for dev, 2 godaddy
     public static $connection;
     private static $servername = "";
     private static $username = "";
@@ -11,7 +11,7 @@ class Database {
 
     function setEnvironment() {
         try {
-            if(self::$environment == 1) { //dev
+            if(self::$environment == 3) { //dev
                 static::$servername = "localhost";
                 static::$username = "root"; //apgiaa godaddy.com
                 self::$password = "root";
@@ -59,7 +59,12 @@ class Database {
         $user_id = 0;
         $return_array = [];
 
-        $sql = "SELECT user_id FROM users WHERE username = ? AND password = ? ";
+        $sql = "SELECT 
+                user_id 
+            FROM 
+                users 
+            WHERE 
+                username = ? AND password = ? ";
 
         try {
             $stmt = self::$connection->prepare($sql);

@@ -1,3 +1,7 @@
+html, body {
+  margin: 0px;
+}
+
 #p_logout {
   position: fixed;
   bottom: 25px;
@@ -215,18 +219,41 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url(../images/background2.jpg);
+  /*background-image: url(../images/background2.jpg);*/
   /*background-image: url(https://www.w3schools.com/howto/img_parallax.jpg);*/
-  
+  background-color: #27c451;
   height: 100vh;
   width: 100vw;
   position: relative;
+  margin: 0px;
 }
 
 #div_login {
   position: absolute;
-  top: 50%;
-  left: 30%;
+  background-color: white;
+  display: block;
+  width: 500px;
+  height: 250px;
+  top: 30%;
+  left: 35%;
+  text-align: center;
+}
+
+#input_login_un {
+  width: 300px;
+}
+
+#input_login_pw {
+  width: 300px;
+}
+
+#btn_login {
+  width: 300px;
+  background-color: #27c451;
+}
+
+#p_register {
+  font-size: 12px;
 }
 
 .test {
@@ -373,5 +400,43 @@ a:visited {
     border-style: solid; 
     border-color: black; 
     background-color: #f5f7f7;
+  }
+
+  #div_background {
+    background-color: #27c451;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    margin: 0px;
+  }
+
+  #div_login {
+    position: absolute;
+    left: 10%;
+    background-color: white;
+    display: block;
+    width: 300px;
+    height: 300px;
+    text-align: center;
+  }
+
+  #div_copyright {
+  }  
+
+  #input_login_un {
+    width: 200px;
+  }
+
+  #input_login_pw {
+    width: 200px;
+  }
+
+  #btn_login {
+    width: 200px;
+    background-color: #27c451;
+  }
+
+  #p_register {
+    font-size: 10px;
   }
 }
