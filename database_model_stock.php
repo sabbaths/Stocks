@@ -2,7 +2,7 @@
 
 class Database {
 
-    private static $environment = 1; //1 for dev, 2 godaddy
+    private static $environment = 4; //1 for dev, 2 godaddy
     public static $connection;
     private static $servername = "";
     private static $username = "";
