@@ -245,7 +245,14 @@ FROM OLD CSS MENU ITEM
 
 .stock_list_item {
   display: block;
-  width: 60%;
+  list-style: none;
+  height: 20px;
+  width: 200px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0px 10px 0px 10px;
 }
 
 .stock_list_item > li {
@@ -254,6 +261,7 @@ FROM OLD CSS MENU ITEM
 
 .stock_list_item:first-of-type {
   display: block;
+  margin-top: 10px;
 } 
 
 #stock_list_item_div {
@@ -261,6 +269,7 @@ FROM OLD CSS MENU ITEM
   overflow: auto;
   margin: 0px;
   padding: 0px;
+  width: 100%;
 }
 
 .stock_item {
@@ -268,7 +277,7 @@ FROM OLD CSS MENU ITEM
   list-style-type: none;
   text-align: right;
   width: 45px;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .stock_item > a {
